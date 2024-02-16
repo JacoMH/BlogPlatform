@@ -6,22 +6,20 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Home | Blog Site</title>
        <link rel="stylesheet" type="text/css" href="css\mobile.css">
-    <link rel="stylesheet" type"text/css" href="css\desktop.css" media="only screen and (min-width: 800px)">
+    <link rel="stylesheet" type="text/css" href="css\desktop.css" media="only screen and (min-width: 800px)">
 </head>
 <body>
     <main class="container">
-        <div style="flex-direction: row-reverse; display: flex;">
         <?php
-        include("Includes/header.php");
+        include("Includes/header1.php");
         ?>
         </div>
 
-        <main>
-            <search class = "">
-                <input type="text" placeholder="Search..">
-            </search>
-        </main>
-    
+            <div class="search">
+                <input  class = "search" type="text" placeholder="Enter..">
+                <button type="submit"><i class="searchButton"></i>Search</button>
+            </div>
+            
         <?php
         include("Includes/footer.php");
         ?>

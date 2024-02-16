@@ -1,0 +1,46 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    min-width: 400px;
+    margin: auto;
+    padding: 0px 10px;
+}
+
+a{
+    text-decoration: none;
+    color: grey;
+}
+
+a:hover{
+    text-decoration: none;
+    color: blue;
+}
+
+nav ul{
+    display: flex;
+    list-style: none;
+    flex-direction: row;
+}
+
+nav ul a{
+    margin: 5px 20px;
+}
+
+.footer{
+    border-top: 1px solid grey;
+    text-align: center;
+    padding-top: 5px;
+}
+
+li {
+    border-radius: 8px;
+    padding: 10px;
+    margin: 5px;
+    background: green;
+}
+
+.search {
+    display: flex;
+    margin: auto;
+    padding: 10px;
+}

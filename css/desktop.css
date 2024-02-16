@@ -1,8 +1,14 @@
 .container{
     display: flex;
     flex-direction: column;
+    min-width: 400px;
     margin: auto;
-    padding: 0px 50px;
+    padding: 0px 100px;
+}
+
+#logo{
+    display: flex;
+    
 }
 
 a{
@@ -18,7 +24,11 @@ a:hover{
 nav ul{
     display: flex;
     list-style: none;
-    flex-direction: row;
+}
+
+nav{
+    display: flex;
+    flex-direction: row-reverse;
 }
 
 nav ul a{
@@ -28,7 +38,7 @@ nav ul a{
 .footer{
     border-top: 1px solid grey;
     text-align: center;
-    padding-top: 5px;
+    margin-top: 5px;
 }
 
 li {
@@ -36,4 +46,26 @@ li {
     padding: 10px;
     margin: 5px;
     background: green;
+}
+
+.search {
+    margin: auto;
+    padding: 10px;
+}
+
+.searchButton {
+    text-align: center;
+}
+
+.logRegContainer{
+    background-color: grey;
+    padding: 30px;
+    border-radius: 8px;
+    color: white;
+    margin: auto;
+}
+
+.loginButton{
+    padding: 15px;
+    margin: auto;
 }
