@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
+
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -20,11 +22,11 @@
             </tr>
             <tr>
                 <th>Last name</th>
-                <th><input  class = "search" type="text" name="fname" placeholder="Enter.."></th>
+                <th><input  class = "search" type="text" name="lname" placeholder="Enter.."></th>
             </tr>
             <tr>
                 <th>Date Of Birth</th>
-                <th><input type= "date"></th>
+                <th><input type= "date" name="dateTime"></th>
             </tr>
             <tr>
                 <th>Email</th>
@@ -41,20 +43,27 @@
             <tr>
             <tr style="display: flex; flex-direction: column; justify-content: center; margin: 15px 0px;">
                 <th>Security Question: Where were your parents born?:</th>
-                <th><input  class = "search" type="text" placeholder="Enter.."></th>
+                <th><input  class = "search" name="securityAns" type="text" placeholder="Enter.."></th>
             </tr>
+            </tr>
+            <tr name="warning">
+                
             </tr>
         </table>
 
         <table>
             <tr>
-            <button type="submit"><i class="loginButton"></i>Register</button>
+            <button type="button" onclick="checkRegFunction()" name="regButton"><i class="loginButton" ></i>Register</button>
             </tr>
         </table>
+        <?php
+            
+        ?>
         </div>
         <?php
             include("Includes/footer.php");
             ?>
     </main>
+    <script src="js/main.js"></script>
 </body>
 </html>
