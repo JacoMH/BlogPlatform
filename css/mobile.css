@@ -44,3 +44,11 @@ li {
     margin: auto;
     padding: 10px;
 }
+
+.logRegContainer{
+    background-color: grey;
+    padding: 30px;
+    border-radius: 8px;
+    color: white;
+    margin: auto;
+}

@@ -66,5 +66,7 @@ li {
 }
 
 .loginButton{
-    margin: auto;
+    padding: 0px;
+    display:flex;
+    align-content: center;
 }
