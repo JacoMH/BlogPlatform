@@ -63,6 +63,8 @@ li {
     border-radius: 8px;
     color: white;
     margin: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .loginButton{
