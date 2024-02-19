@@ -14,36 +14,19 @@
             ?>
     
     <div class="logRegContainer">
-        <table>
-            <tr>
-                <th>Username</th>
-                <th><input  class = "search" type="text" name="fname" placeholder="Enter.."></th>
-            </tr>
-            <tr>
-                <th>Password</th>
-                <th><input  class = "search" type="password" name="password" placeholder="Enter.."></th>
-            </tr>
-        </table>
-        
-        <table>
-            <tr>
-            <tr style="display: flex; flex-direction: column; justify-content: center; margin: 15px 0px;">
-                <th>Security Question: Where were your parents born?:</th>
-                <th><input  class = "search" type="text" placeholder="Enter.."></th>
-            </tr>
-            </tr>
-        </table>
-
-        <table>
-            <tr>
-            <button type="submit"><i class="loginButton"></i>Login</button>
-            </tr>
-        </table>
+        <form class="logRegContainer" name="login" onSubmit="checkLogFunction()">
+            Username: <input type="text" name="username">
+            Password: <input type="password" name="password">
+            Security Question: Where was your mother born?
+            <input type="text" name="securityAns">
+            <button type="submit" name="logButton"><i class="loginButton"></i>Login</button>
+        </form>
     </div>
 
         <?php
             include("Includes/footer.php");
             ?>
     </main>
+    <script src="js/main.js"></script>
 </body>
 </html>
