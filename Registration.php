@@ -14,52 +14,19 @@
         <?php
             include("Includes/header1.php");
             ?>
-        <div class="logRegContainer">
-        <table>
-            <tr>
-                <th>First name</th>
-                <th><input  class = "search" type="text" name="fname" placeholder="Enter.."></th>
-            </tr>
-            <tr>
-                <th>Last name</th>
-                <th><input  class = "search" type="text" name="lname" placeholder="Enter.."></th>
-            </tr>
-            <tr>
-                <th>Date Of Birth</th>
-                <th><input type= "date" name="dateTime"></th>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <th><input class = "search" type="email" name="email" placeholder="Enter.."></th>
-            </tr>
-
-            <tr>
-                <th>Password</th>
-                <th><input  class = "search" type="password" name="password" placeholder="Enter.."></th>
-            </tr>
-        </table>
-        
-        <table>
-            <tr>
-            <tr style="display: flex; flex-direction: column; justify-content: center; margin: 15px 0px;">
-                <th>Security Question: Where were your parents born?:</th>
-                <th><input  class = "search" name="securityAns" type="text" placeholder="Enter.."></th>
-            </tr>
-            </tr>
-            <tr name="warning">
-                hello
-            </tr>
-        </table>
-
-        <table>
-            <tr>
-            <button type="button" onclick="checkRegFunction()" name="regButton"><i class="loginButton" ></i>Register</button>
-            </tr>
-        </table>
+            <form id="logRegContainer" name="registration" onSubmit="return checkRegFunction()">
+                First Name: <input type="text" name="fname">
+                Surname: <input type="text" name="lname">
+                DOB: <input type="date" name="dateTime">
+                Email:  <input type="text" name="email">
+                Password: <input type="password" name="password">
+                Security Question: Where was your mother born?
+                <input type="text" name="securityAns">
+                <button type="submit" name="regButton"><i class="loginButton" ></i>Register</button>
+            </form>
         <?php
             
         ?>
-        </div>
         <?php
             include("Includes/footer.php");
             ?>
