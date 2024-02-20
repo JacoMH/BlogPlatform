@@ -1,6 +1,6 @@
 <header>
     <div id="logo">
-       <h2>Blog Platform</h2>
+       <h2>Blog Platform</h2> 
     </div>
     <nav>
         <ul>
