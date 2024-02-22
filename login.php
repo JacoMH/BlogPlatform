@@ -17,7 +17,7 @@
             include("Includes/header1.php");
             ?>
     
-    <div class="logRegContainer">
+    <div class="container">
         <form class="logRegContainer" name="login" onSubmit="checkLogFunction()" method="POST" action="login.php">
             Username: <input type="text" name="username">
             Password: <input type="password" name="password">
@@ -31,25 +31,21 @@
                 $password = $_POST["password"] ?? null; $password = preg_replace('/\s+/', '', $password);
                 $securityAnswer = $_POST["securityAns"] ?? null; $securityAnswer = preg_replace('/\s+/', '', $securityAnswer);
                 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-                $checkLoginQuery = $mysqli->prepare("SELECT username, hashedPass, securityQuestionAns FROM user WHERE username = '$username' AND securityQuestionAns = '$securityAnswer'");
-                $result = $checkLoginQuery->execute();
-                while ($row = mysqli_fetch_assoc($result)) {
-                    $check_username = $row['username'];
-                    $check_password = $row['hashedPass'];
-                    $check_SecurityQ = $row['securityQuestionAns'];
+                $checkLoginQuery = "SELECT username, hashedPass, securityQuestionAns FROM user WHERE username = '$username' AND securityQuestionAns = '$securityAnswer'";
+                $result = mysqli_query($mysqli, $checkLoginQuery);
+                while($row = mysqli_fetch_assoc($result)) {
+                    $check_username = $row["username"];     //https://stackoverflow.com/questions/46819734/how-to-check-username-and-password-matches-the-database-values
+                    $check_password = $row["hashedPass"];
+                    $check_SecurityQ = $row["securityQuestionAns"];
                 }
                 if ($username == $check_username && $securityAnswer == $check_SecurityQ) {
-                    $valid = password_verify ($password, $hash);
+                    $valid = password_verify ($password, $check_password);
                     if ($valid) {
-                        if (password_needs_rehash($hash, PASSWORD_DEFAULT)) {
-                            $newHash = password_hash($password, PASSWORD_DEFAULT);
-                            $query = $mysqli->prepare("UPDATE user WHERE hashedPass = '$newHash'");
-                            $query->execute();
-                            echo("<h2>logged in</h2>");
-                        }
-                        else {
-                            echo("<h2>Incorrect credentials, Try again.</h2>");
-                        }
+                        echo("<h2>logged in</h2>");
+                        header("Location: Profile.php", true, 301);         
+                    }
+                    else{
+                        echo("<h2>Incorrect credentials, Try again.</h2>");
                     }
                 }
                 else{
