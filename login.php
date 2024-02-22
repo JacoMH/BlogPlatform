@@ -30,12 +30,33 @@
                 $username = $_POST["username"] ?? null; $username = preg_replace('/\s+/', '', $username);
                 $password = $_POST["password"] ?? null; $password = preg_replace('/\s+/', '', $password);
                 $securityAnswer = $_POST["securityAns"] ?? null; $securityAnswer = preg_replace('/\s+/', '', $securityAnswer);
-                $checkLoginQuery = "SELECT EXISTS(username, pass, securityQuestionAns FROM user WHERE username = '$username' AND pass = '$password' AND securityQuestionAns = '$securityAnswer')";
-                $result = $mysqli->query($checkLoginQuery);
-                $row = $result->fetch_array(MYSQLI_ASSOC);              //learnt how to put the object into strings so i can compare to what the user has entered here: https://www.php.net/manual/en/mysqli-result.fetch-array.php
-                if ($row["username"])
+                mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+                $checkLoginQuery = $mysqli->prepare("SELECT username, hashedPass, securityQuestionAns FROM user WHERE username = '$username' AND securityQuestionAns = '$securityAnswer'");
+                $result = $checkLoginQuery->execute();
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $check_username = $row['username'];
+                    $check_password = $row['hashedPass'];
+                    $check_SecurityQ = $row['securityQuestionAns'];
+                }
+                if ($username == $check_username && $securityAnswer == $check_SecurityQ) {
+                    $valid = password_verify ($password, $hash);
+                    if ($valid) {
+                        if (password_needs_rehash($hash, PASSWORD_DEFAULT)) {
+                            $newHash = password_hash($password, PASSWORD_DEFAULT);
+                            $query = $mysqli->prepare("UPDATE user WHERE hashedPass = '$newHash'");
+                            $query->execute();
+                            echo("<h2>logged in</h2>");
+                        }
+                        else {
+                            echo("<h2>Incorrect credentials, Try again.</h2>");
+                        }
+                    }
+                }
+                else{
+                    echo("no login");
+                }
                 //may change this as it does seem a bit pointless, could find a way to check if it exists in the database then move on.
-            
+                //find a way to if the login information is correct collect stuff and store it so you can go to the profile page and view stuff
             }
         ?>
     </div>
