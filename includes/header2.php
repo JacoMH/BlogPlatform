@@ -1,6 +1,6 @@
 <header>
     <div id="logo">
-        Blog Platform
+        <h2>Blog Platform</h2>
     </div>
 
 </header>

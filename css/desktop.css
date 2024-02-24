@@ -72,3 +72,25 @@ li {
     display:flex;
     align-content: center;
 }
+
+.banner{
+    background: grey;
+    border-radius: 8px;
+    padding: 100px;
+}
+
+.profilePic{
+    background:brown;
+    border-radius: 300px;
+    padding: 40px;
+    width: 40px;
+    height: 40px;
+    z-index: -1;
+}
+
+.realName, .profilePic{
+    display: flex;
+    margin: auto;
+    color: #828079;
+    font-size:large;
+}

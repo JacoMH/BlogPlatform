@@ -37,17 +37,22 @@
                     $check_username = $row["username"];     //https://stackoverflow.com/questions/46819734/how-to-check-username-and-password-matches-the-database-values
                     $check_password = $row["hashedPass"];
                     $check_SecurityQ = $row["securityQuestionAns"];
+                    $first_name = $row["firstName"];
+                    $last_name = $row["lastName"];
+                    $profilePic = $row["profilePicture"];
+                    $bannerPic = $row["bannerPicture"];
+
                 }
                 if ($username == $check_username && $securityAnswer == $check_SecurityQ) {
                     $valid = password_verify ($password, $check_password);
                     if ($valid) {
                         session_start();
                         $_SESSION["userID"] = $row["userID"];
-                        $_SESSION["username"] = $username;
-                        $_SESSION["firstName"] = $row["firstName"];
-                        $_SESSION["lastName"] = $row["lastName"];
-                        $_SESSION["profilePicture"] = $row["profilePicture"];
-                        $_SESSION["bannerPicture"] = $row["bannerPicture"];
+                        $_SESSION["username"] = $check_username;
+                        $_SESSION["firstName"] = $first_name;
+                        $_SESSION["lastName"] = $last_name;
+                        $_SESSION["profilePicture"] = $profilePic;
+                        $_SESSION["bannerPicture"] = $bannerPic;
                         echo("<h2>logged in</h2>");
                         header("Location: Profile.php", true, 301);         
                     }

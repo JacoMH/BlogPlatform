@@ -14,7 +14,6 @@
 <body>
     <main class="container">
         <?php
-            $status = "";
             include("Includes/header1.php");
             ?>
             <form class="logRegContainer" name="registration" onSubmit="checkRegFunction()" method="POST" action="Registration.php">
