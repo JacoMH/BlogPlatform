@@ -31,7 +31,7 @@
                 $password = $_POST["password"] ?? null; $password = preg_replace('/\s+/', '', $password);
                 $securityAnswer = $_POST["securityAns"] ?? null; $securityAnswer = preg_replace('/\s+/', '', $securityAnswer);
                 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
-                $checkLoginQuery = "SELECT username, hashedPass, securityQuestionAns FROM user WHERE username = '$username' AND securityQuestionAns = '$securityAnswer'";
+                $checkLoginQuery = "SELECT * FROM user WHERE username = '$username' AND securityQuestionAns = '$securityAnswer'";
                 $result = mysqli_query($mysqli, $checkLoginQuery);
                 while($row = mysqli_fetch_assoc($result)) {
                     $check_username = $row["username"];     //https://stackoverflow.com/questions/46819734/how-to-check-username-and-password-matches-the-database-values
@@ -41,6 +41,13 @@
                 if ($username == $check_username && $securityAnswer == $check_SecurityQ) {
                     $valid = password_verify ($password, $check_password);
                     if ($valid) {
+                        session_start();
+                        $_SESSION["userID"] = $row["userID"];
+                        $_SESSION["username"] = $username;
+                        $_SESSION["firstName"] = $row["firstName"];
+                        $_SESSION["lastName"] = $row["lastName"];
+                        $_SESSION["profilePicture"] = $row["profilePicture"];
+                        $_SESSION["bannerPicture"] = $row["bannerPicture"];
                         echo("<h2>logged in</h2>");
                         header("Location: Profile.php", true, 301);         
                     }
