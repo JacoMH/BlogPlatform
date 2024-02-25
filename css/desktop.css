@@ -38,7 +38,7 @@ nav ul a{
 .footer{
     border-top: 1px solid grey;
     text-align: center;
-    margin-top: 5px;
+    margin-top: 10px;
 }
 
 li {
@@ -88,9 +88,47 @@ li {
     z-index: -1;
 }
 
-.realName, .profilePic{
+.realName, .profilePic, .username{
     display: flex;
     margin: auto;
     color: #828079;
     font-size:large;
+}
+
+.username{
+    font-size:xx-large;
+    color:#52504d;
+}
+
+.postContent{
+    background:green;
+    border-radius: 4px;
+    display: flex;
+    flex-direction:row;
+    align-content: center;
+    padding:10px;
+}
+
+.userProfilePic{
+    background: brown;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 5px;
+    border-radius: 300px;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    padding: 10px;
+}
+
+.AllPostsContainer{
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    padding: 10px;
+    border: 1px solid grey;
+    border-radius: 8px;
+    padding: 10px 400px;
 }
