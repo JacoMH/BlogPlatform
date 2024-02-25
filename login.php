@@ -37,6 +37,7 @@
                     $check_username = $row["username"];     //https://stackoverflow.com/questions/46819734/how-to-check-username-and-password-matches-the-database-values
                     $check_password = $row["hashedPass"];
                     $check_SecurityQ = $row["securityQuestionAns"];
+                    $userID = $row['userID'];
                     $first_name = $row["firstName"];
                     $last_name = $row["lastName"];
                     $profilePic = $row["profilePicture"];
@@ -47,7 +48,7 @@
                     $valid = password_verify ($password, $check_password);
                     if ($valid) {
                         session_start();
-                        $_SESSION["userID"] = $row["userID"];
+                        $_SESSION["userID"] = $userID;
                         $_SESSION["username"] = $check_username;
                         $_SESSION["firstName"] = $first_name;
                         $_SESSION["lastName"] = $last_name;

@@ -2,6 +2,12 @@
 <?php
     require_once('includes/config.php');
     session_start();
+    $SessionUser = $_SESSION['userID'];
+    
+    
+    //display posts made by user
+    $userPostQuery = "SELECT * FROM blogpost WHERE userID = '$SessionUser'";
+    $result = mysqli_query($mysqli, $userPostQuery);
 ?>
 
 <!DOCTYPE html>
@@ -36,11 +42,9 @@
         <div class="postcontainer">
             <?php
             //do if statements depending on the type of post it is, e.g. if its just text then do a just text post, with images has a diff format etc.
-            while ($obj =  $result->fetch_object()) {
-                echo("<table>");
-                echo("<tr>");
-                echo("<th>{$obj->");
-                    //
+            while ($row = mysqli_fetch_assoc($result)) {
+                echo($row["userID"]);
+                echo($row["blogPostText"]);
             }
             ?>
         </div>
