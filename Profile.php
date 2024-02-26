@@ -3,7 +3,7 @@
     require_once('includes/config.php');
     session_start();
     $SessionUser = $_SESSION['userID'];
-    
+    $postContent = "";
     
     //display posts made by user
     $userPostQuery = "SELECT * FROM blogpost WHERE userID = '$SessionUser'";
