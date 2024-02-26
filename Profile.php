@@ -27,9 +27,11 @@
         <div class="banner">
             
         </div>
+        <div class="topbanner">
         <?php
         echo("Welcome back, "); echo($_SESSION["firstName"]);
         ?>
+        </div>
         <div class="profilePic">
             
         </div>
@@ -43,12 +45,32 @@
             echo($_SESSION["username"]);
             ?>
         </span>
+        <form class="createPostContainer" action="Profile.php" method="POST">
+            <div style="display: flex; flex-direction: row;">
+                <textarea id="w3review" name="textContent" rows="4" cols="50"></textarea>
+                <button class = "createButton" type="submit" name="makePostButton">Create Post</button>
+            </div>
+            <div style="display: flex; flex-direction: row;">
+            <button class = "createButton" type="button" name="imageContent">Add Image</button>
+            <button class = "createButton" type="button" name="linkContent">Add Link</button>
+            <button class = "createButton" type="button" name="videoContent">Add Video</button>
+            </div>
+        </form>
+        <?php
+        //this method of it works but not well, need to find a way to clear the variables when refreshed.
+            if (isset($_POST['makePostButton']) && $_POST['textContent'] != "") {
+                $postContent = $_POST['textContent'] ?? null;
+                $addToPosts = $mysqli->prepare("INSERT INTO blogpost (userID, blogPostText) VALUES ('$SessionUser', '$postContent')");
+                $addToPosts->execute();
+            }
+        ?>
         <div class="AllPostsContainer">
             <?php
             //do if statements depending on the type of post it is, e.g. if its just text then do a just text post, with images has a diff format etc.
             while ($row = mysqli_fetch_assoc($result)) {
                 $profileID = $row['userID'];
                 
+                echo("<div class='post'>");
                 //fetch their profile
                 $fetchUserProfile = "SELECT profilePicture, username FROM user where userID = '$profileID'";
 
@@ -57,11 +79,6 @@
                 $profileResult = mysqli_query($mysqli, $fetchUserProfile);
                 $profile = mysqli_fetch_assoc($profileResult);
                 echo($profile["profilePicture"]);
-                echo("</div>");
-
-                //username
-                echo("<div class = 'username'>");
-                    
                 echo("</div>");
                 
                 //fetch the post
@@ -104,9 +121,11 @@
                     echo($row['blogPostVideo']);
                     echo("</div>");
                 }
+                echo("</div>");
             }
             ?>
         </div>
+        
         <?php
                 //query which selects all profile stuff, lists posts etc. made. If query returns nothing then 2 buttons are displayed telling the user to log in or reg
                 include("Includes/footer.php");
