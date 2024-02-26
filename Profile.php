@@ -54,14 +54,16 @@
             <button class = "createButton" type="button" name="imageContent">Add Image</button>
             <button class = "createButton" type="button" name="linkContent">Add Link</button>
             <button class = "createButton" type="button" name="videoContent">Add Video</button>
+            <input type="checkbox" name="commentToggle" checked>Enable Comments
             </div>
         </form>
         <?php
-        //this method of it works but not well, need to find a way to clear the variables when refreshed.
             if (isset($_POST['makePostButton']) && $_POST['textContent'] != "") {
                 $postContent = $_POST['textContent'] ?? null;
-                $addToPosts = $mysqli->prepare("INSERT INTO blogpost (userID, blogPostText) VALUES ('$SessionUser', '$postContent')");
+                $commentToggle = $_POST['commentToggle'] ?? null;
+                $addToPosts = $mysqli->prepare("INSERT INTO blogpost (userID, blogPostText, commentsEnabled) VALUES ('$SessionUser', '$postContent', '$commentToggle')");
                 $addToPosts->execute();
+                header("Refresh:0");
             }
         ?>
         <div class="AllPostsContainer">
@@ -69,7 +71,7 @@
             //do if statements depending on the type of post it is, e.g. if its just text then do a just text post, with images has a diff format etc.
             while ($row = mysqli_fetch_assoc($result)) {
                 $profileID = $row['userID'];
-                
+                echo("<form method='POST' action='comments.php'>");
                 echo("<div class='post'>");
                 //fetch their profile
                 $fetchUserProfile = "SELECT profilePicture, username FROM user where userID = '$profileID'";
@@ -121,7 +123,23 @@
                     echo($row['blogPostVideo']);
                     echo("</div>");
                 }
+
+                //toggle comments
+                if ($row['commentsEnabled'] == "on") {
+                    echo("<button type='submit' name='commentsButton'>Comments</button>");
+                }
+                else if ($row['commentsEnabled'] == "off") {
+                    echo("<p>Comments Disabled</p>");
+                }
                 echo("</div>");
+                echo("</form>");
+                if(isset($_POST['commentsButton'])) {
+                    $_SESSION['postUsername'] = $profile['username'] ?? null;
+                    $_SESSION['postText'] = $row['blogPostText'] ?? null;
+                    $_SESSION['postImage'] = $row['blogPostImage'] ?? null;
+                    $_SESSION['postLink'] = $row['blogPostLink'] ?? null;
+                    $_SESSION['postVideo'] = $row['blogPostVideo'] ?? null;
+                }
             }
             ?>
         </div>
