@@ -3,7 +3,12 @@
     flex-direction: column;
     min-width: 400px;
     margin: auto;
-    padding: 0px 10px;
+    padding: 0px 100px;
+}
+
+#logo{
+    display: flex;
+    
 }
 
 a{
@@ -19,7 +24,11 @@ a:hover{
 nav ul{
     display: flex;
     list-style: none;
-    flex-direction: row;
+}
+
+nav{
+    display: flex;
+    flex-direction: row-reverse;
 }
 
 nav ul a{
@@ -29,7 +38,7 @@ nav ul a{
 .footer{
     border-top: 1px solid grey;
     text-align: center;
-    padding-top: 5px;
+    margin-top: 10px;
 }
 
 li {
@@ -40,9 +49,12 @@ li {
 }
 
 .search {
-    display: flex;
     margin: auto;
     padding: 10px;
+}
+
+.searchButton {
+    text-align: center;
 }
 
 .logRegContainer{
@@ -51,4 +63,103 @@ li {
     border-radius: 8px;
     color: white;
     margin: auto;
+    display: flex;
+    flex-direction: column;
 }
+
+.loginButton{
+    padding: 0px;
+    display:flex;
+    align-content: center;
+}
+
+.banner{
+    background: grey;
+    border-radius: 8px;
+    padding: 100px;
+}
+
+.profilePic{
+    background:brown;
+    border-radius: 300px;
+    padding: 40px;
+    width: 40px;
+    height: 40px;
+    z-index: -1;
+}
+
+.realName, .profilePic, .username{
+    display: flex;
+    margin: auto;
+    color: #828079;
+    font-size:large;
+}
+
+.username{
+    font-size:xx-large;
+    color:#52504d;
+}
+
+.postContent{
+    background:green;
+    border-radius: 4px;
+    display: flex;
+    flex-direction:row;
+    align-content: center;
+    padding:10px;
+}
+
+.userProfilePic{
+    background: brown;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
+    border-radius: 300px;
+    max-width: 40px;
+    max-height: 40px;
+    display: flex;
+    flex-direction: row;
+    align-content: center;
+    padding: 20px;
+}
+
+.AllPostsContainer{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    padding: 10px;
+    border: 1px solid grey;
+    border-radius: 8px;
+}
+
+.topbanner{
+    display: flex;
+    flex-direction: row;
+    margin: 5px;
+    justify-content: space-between;
+}
+
+.createButton{
+    padding: 5px;
+}
+
+.post{  
+    display:flex;
+    flex-direction: row;
+    margin-top: 5px;
+    align-items: center;
+}
+
+.createPostContainer{
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    padding: 10px;
+    border: 1px solid grey;
+    border-radius: 8px;
+    margin-bottom: 5px;
+}
+
+textarea {
+    resize: none;
+  }
