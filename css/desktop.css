@@ -163,3 +163,7 @@ li {
 textarea {
     resize: none;
   }
+
+  .smallCommentText{
+    font-size: smaller;
+  }

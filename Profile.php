@@ -61,17 +61,19 @@
             if (isset($_POST['makePostButton']) && $_POST['textContent'] != "") {
                 $postContent = $_POST['textContent'] ?? null;
                 $commentToggle = $_POST['commentToggle'] ?? null;
-                $addToPosts = $mysqli->prepare("INSERT INTO blogpost (userID, blogPostText, commentsEnabled) VALUES ('$SessionUser', '$postContent', '$commentToggle')");
+                $addToPosts = $mysqli->prepare("INSERT INTO blogpost (userID, blogPostText, commentsEnabled, DateAndTime) VALUES ('$SessionUser', '$postContent', '$commentToggle', now())");
                 $addToPosts->execute();
                 header("Refresh:0");
             }
         ?>
         <div class="AllPostsContainer">
             <?php
+            //filter will fetch everything again but in different orders, refresh page to do it
+            //add like button, works by having a seperate table to identify all the posts that have been liked by the same user.
             //do if statements depending on the type of post it is, e.g. if its just text then do a just text post, with images has a diff format etc.
+            echo("<form method='POST' action='comments.php'>");
             while ($row = mysqli_fetch_assoc($result)) {
                 $profileID = $row['userID'];
-                echo("<form method='POST' action='comments.php'>");
                 echo("<div class='post'>");
                 //fetch their profile
                 $fetchUserProfile = "SELECT profilePicture, username FROM user where userID = '$profileID'";
@@ -123,23 +125,26 @@
                     echo($row['blogPostVideo']);
                     echo("</div>");
                 }
-
+                echo("</div>");
                 //toggle comments
                 if ($row['commentsEnabled'] == "on") {
                     echo("<button type='submit' name='commentsButton'>Comments</button>");
                 }
-                else if ($row['commentsEnabled'] == "off") {
-                    echo("<p>Comments Disabled</p>");
+                else if ($row['commentsEnabled'] == "") {
+                    echo("<div class='smallCommentText'>");
+                    echo("Comments Disabled");
+                    echo("</div>");
                 }
-                echo("</div>");
-                echo("</form>");
-                if(isset($_POST['commentsButton'])) {
-                    $_SESSION['postUsername'] = $profile['username'] ?? null;
-                    $_SESSION['postText'] = $row['blogPostText'] ?? null;
-                    $_SESSION['postImage'] = $row['blogPostImage'] ?? null;
-                    $_SESSION['postLink'] = $row['blogPostLink'] ?? null;
-                    $_SESSION['postVideo'] = $row['blogPostVideo'] ?? null;
-                }
+
+            if(isset($_POST['commentsButton'])) {
+                alert("hello");
+                $_SESSION['postUsername'] = $profile['username'] ?? null;
+                $_SESSION['postText'] = $row['blogPostText'] ?? null;
+                $_SESSION['postImage'] = $row['blogPostImage'] ?? null;
+                $_SESSION['postLink'] = $row['blogPostLink'] ?? null;
+                $_SESSION['postVideo'] = $row['blogPostVideo'] ?? null;
+            }
+            echo("</form>");
             }
             ?>
         </div>
