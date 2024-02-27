@@ -4,7 +4,6 @@
     session_start();
     $SessionUser = $_SESSION['userID'];
     $postContent = "";
-    
     //display posts made by user
     $userPostQuery = "SELECT * FROM blogpost WHERE userID = '$SessionUser'";
     $result = mysqli_query($mysqli, $userPostQuery);
@@ -71,7 +70,7 @@
             //filter will fetch everything again but in different orders, refresh page to do it
             //add like button, works by having a seperate table to identify all the posts that have been liked by the same user.
             //do if statements depending on the type of post it is, e.g. if its just text then do a just text post, with images has a diff format etc.
-            echo("<form method='POST' action='comments.php'>");
+            echo("<form method='POST' action='Profile.php'>");
             while ($row = mysqli_fetch_assoc($result)) {
                 $profileID = $row['userID'];
                 echo("<div class='post'>");
@@ -84,7 +83,10 @@
                 $profile = mysqli_fetch_assoc($profileResult);
                 echo($profile["profilePicture"]);
                 echo("</div>");
-                
+
+
+
+
                 //fetch the post
                 if ($row['blogPostText'] != "" && $row['blogPostImage'] == "" && $row['blogPostLink'] == "" && $row['blogPostVideo'] == ""){
                     echo("<div class = 'postContent'>");
@@ -126,25 +128,32 @@
                     echo("</div>");
                 }
                 echo("</div>");
+                $postID = $row['blogPostID'];
+                
                 //toggle comments
                 if ($row['commentsEnabled'] == "on") {
-                    echo("<button type='submit' name='commentsButton'>Comments</button>");
+                    echo("<button type='submit' name='$postID'>Comments</button>");
                 }
                 else if ($row['commentsEnabled'] == "") {
                     echo("<div class='smallCommentText'>");
                     echo("Comments Disabled");
                     echo("</div>");
                 }
-
-            if(isset($_POST['commentsButton'])) {
-                alert("hello");
-                $_SESSION['postUsername'] = $profile['username'] ?? null;
-                $_SESSION['postText'] = $row['blogPostText'] ?? null;
-                $_SESSION['postImage'] = $row['blogPostImage'] ?? null;
-                $_SESSION['postLink'] = $row['blogPostLink'] ?? null;
-                $_SESSION['postVideo'] = $row['blogPostVideo'] ?? null;
-            }
+                echo("<div class='smallCommentText'>");
+                    echo($row['DateAndTime']);
+                echo("</div>");
+    
             echo("</form>");
+            if(isset($_POST[$postID])) {
+                alert("hello");
+                $fetchPost = "SELECT * FROM user, blogPost INNER JOIN user.userID = blogPost.userID WHERE blogPost == '$postID'";
+                $PostResult = mysqli_query($mysqli, $fetchPost);
+            
+            while ($resultRow = mysqli_fetch_assoc($PostResult)) {
+                $_SESSION['commentPageUsername'] = $resultRow['username'];
+                $_SESSION
+            }   
+            }
             }
             ?>
         </div>
