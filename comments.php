@@ -1,6 +1,7 @@
 <?php
     require_once('includes/config.php');
     session_start();
+    
 ?>
 
 <!DOCTYPE html>
@@ -13,8 +14,11 @@
     <link rel="stylesheet" type="text/css" href="css\desktop.css" media="only screen and (min-width: 800px)">
 </head>
 <body>
+    <div id="hi">
+        <p id="hi">hello</p>
+    </div>
     <?php
-    echo($_SESSION["postUsername"]);
     ?>
+    <script src="js/main.js"></script>
 </body>
 </html>

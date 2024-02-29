@@ -148,6 +148,9 @@ li {
     flex-direction: row;
     margin-top: 5px;
     align-items: center;
+    word-break: break-word;
+    padding-top: 20px;
+    border-top: 1px solid grey;
 }
 
 .createPostContainer{
@@ -164,7 +167,6 @@ textarea {
     resize: none;
   }
 
-  
   .smallCommentText{
     font-size: smaller;
   }

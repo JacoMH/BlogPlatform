@@ -26,3 +26,8 @@ function checkLogFunction() {
         alert("not filled")
     }
 }
+function comment($postID) {
+    alert($postID);
+    window.location.assign("http://localhost/blogplatform/comments.php");
+    document.comments.hi.innerHTML = $postID;
+}

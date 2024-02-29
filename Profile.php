@@ -129,10 +129,11 @@
                 }
                 echo("</div>");
                 $postID = $row['blogPostID'];
+                $blogPostText = $row['blogPostText'];
                 
                 //toggle comments
                 if ($row['commentsEnabled'] == "on") {
-                    echo("<button type='submit' name='$postID'>Comments</button>");
+                    echo("<button type='submit' onclick='comment($postID)' name='CommentButton'>Comments</button>");
                 }
                 else if ($row['commentsEnabled'] == "") {
                     echo("<div class='smallCommentText'>");
@@ -144,24 +145,18 @@
                 echo("</div>");
     
             echo("</form>");
-            if(isset($_POST[$postID])) {
-                alert("hello");
-                $fetchPost = "SELECT * FROM user, blogPost INNER JOIN user.userID = blogPost.userID WHERE blogPost == '$postID'";
-                $PostResult = mysqli_query($mysqli, $fetchPost);
-            
-            while ($resultRow = mysqli_fetch_assoc($PostResult)) {
-                $_SESSION['commentPageUsername'] = $resultRow['username'];
-                $_SESSION
-            }   
-            }
             }
             ?>
         </div>
-        
+    
         <?php
                 //query which selects all profile stuff, lists posts etc. made. If query returns nothing then 2 buttons are displayed telling the user to log in or reg
                 include("Includes/footer.php");
+
+                //for images use imgur, figure out how to post images submitted by people, then get the link from the website to use.
         ?>
+
     </main>
+    <script src="js/main.js"></script>
 </body>
 </html>
