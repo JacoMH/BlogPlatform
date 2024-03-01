@@ -133,7 +133,7 @@
                 
                 //toggle comments
                 if ($row['commentsEnabled'] == "on") {
-                    echo("<button type='submit' onclick='comment($postID)' name='CommentButton'>Comments</button>");
+                    echo("<a href='comments.php?post=$postID'>Comments</a>");
                 }
                 else if ($row['commentsEnabled'] == "") {
                     echo("<div class='smallCommentText'>");
@@ -143,7 +143,10 @@
                 echo("<div class='smallCommentText'>");
                     echo($row['DateAndTime']);
                 echo("</div>");
-    
+                
+                if(isset($_POST['CommentButton'])) {
+                    echo("hello");
+                }
             echo("</form>");
             }
             ?>
