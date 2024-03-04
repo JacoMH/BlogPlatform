@@ -167,6 +167,12 @@ textarea {
     resize: none;
   }
 
-  .smallCommentText{
+.smallCommentText{
     font-size: smaller;
-  }
+}
+
+.CommentUsername{
+    color: grey;
+    display: flex;
+    justify-content: left;
+}

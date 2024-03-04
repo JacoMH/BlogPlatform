@@ -3,9 +3,14 @@
     session_start();
     
     //commenter details
-    $commenterUsername = $_SESSION['username'];
-    $commenterUserID = $_SESSION['userID'];
-    $commenterProfilePic = $_SESSION['profilePicture'];
+    if ($_SESSION['username'] != "" && $_SESSION['userID'] != "") {
+        $commenterUsername = $_SESSION['username'];
+        $commenterUserID = $_SESSION['userID'];
+        $commenterProfilePic = $_SESSION['profilePicture'];
+    }
+    else{
+        header("Refresh:0; url=login.php");
+    }
 
 
     if ($_GET['post']) {
@@ -22,6 +27,8 @@
         $profileResult = mysqli_query($mysqli, $fetchProfile);
         $profile = mysqli_fetch_assoc($profileResult);
 
+        $post = $row['blogPostText'];
+
         //fetch comments on post
         $fetchComments = "SELECT * FROM commentblogpost WHERE blogPostID = '$currentPost'";
         $fetchCommentResult = mysqli_query($mysqli, $fetchComments);
@@ -34,13 +41,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>hello</title>
+    <title>Comment | <?php echo($post);?></title>
     <link rel="stylesheet" type="text/css" href="css\mobile.css">
     <link rel="stylesheet" type="text/css" href="css\desktop.css" media="only screen and (min-width: 800px)">
 </head>
 <body class="container">
     <div class="AllPostsContainer">
         <?php
+            echo("<div class='post'>");
             echo("<div class = 'userProfilePic'>");
             echo($profile["profilePicture"]);
             echo($profile["username"]);
@@ -84,7 +92,7 @@
                 echo($row['blogPostVideo']);
                 echo("</div>");
             }
-        
+            echo("</div>");        
     ?>
 <form class="createPostContainer" method="POST">
             <div style="display: flex; flex-direction: row;">
@@ -111,8 +119,16 @@
             //fetch comment
             $Commentusername = $commentProfile['username'];
             $CommentText = $comments['commentText'];
-            echo("<h2>$Commentusername</h2>");
-            echo("<h2>$CommentText</h2>");
+            
+            //display comment
+            echo("<div class='post'>");
+            echo("<div style='CommentUsername'>");
+            echo("$Commentusername");
+            echo("</div>");
+
+            echo("$CommentText");
+            echo("<span class='material-icons-outlined'> favorite_border</span>");
+            echo("</div>");
         }
         //i think sometimes the comments dont go through
         ?>
