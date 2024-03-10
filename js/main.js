@@ -31,3 +31,10 @@ function comment($postID) {
     window.location.assign("http://localhost/blogplatform/comments.php");
     document.comments.hi.innerHTML = $postID;
 }
+
+function importImage() {
+    let input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/png, image/gif, image/jpeg';
+    input.click();
+}

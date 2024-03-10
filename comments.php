@@ -53,43 +53,12 @@
             echo($profile["profilePicture"]);
             echo($profile["username"]);
             echo("</div>");
-            if ($row['blogPostText'] != "" && $row['blogPostImage'] == "" && $row['blogPostLink'] == "" && $row['blogPostVideo'] == ""){
+            if($row['blogPostText'] != "") {   //  add this when other bit is done && $row['blogPostImage'] != "" && $row['blogPostLink'] != "" && $row['blogPostVideo'] != ""
                 echo("<div class = 'postContent'>");
-                echo($row["blogPostText"]);
-                echo("</div>");
-            }
-            else if ($row['blogPostText'] != "" && $row['blogPostImage'] != "" && $row['blogPostLink'] == "" && $row['blogPostVideo'] == "") {
-                echo("<div class = 'postContent'>");
-                echo($row["blogPostText"]);
-                echo($row['blogPostImage']);
-                echo("</div>");
-            }
-            else if($row['blogPostText'] != "" && $row['blogPostImage'] != "" && $row['blogPostLink'] != "" && $row['blogPostVideo'] == "") {
-                echo("<div class = 'postContent'>");
-                echo($row["blogPostText"]);
-                echo($row['blogPostImage']);
-                echo($row['blogPostLink']);
-                echo("</div>");
-            }
-            else if($row['blogPostText'] != "" && $row['blogPostImage'] != "" && $row['blogPostLink'] != "" && $row['blogPostVideo'] != "") {
-                echo("<div class = 'postContent'>");
-                echo($row["blogPostText"]);
-                echo($row['blogPostImage']);
-                echo($row['blogPostLink']);
-                echo($row['blogPostVideo']);
-                echo("</div>");
-            }
-            else if($row['blogPostText'] != "" && $row['blogPostImage'] == "" && $row['blogPostLink'] != "" && $row['blogPostVideo'] != "") {
-                echo("<div class = 'postContent'>");
-                echo($row["blogPostText"]);
-                echo($row['blogPostLink']);
-                echo($row['blogPostVideo']);
-                echo("</div>");
-            }
-            else if($row['blogPostText'] != "" && $row['blogPostImage'] == "" && $row['blogPostLink'] == "" && $row['blogPostVideo'] != "") {
-                echo("<div class = 'postContent'>");
-                echo($row["blogPostText"]);
-                echo($row['blogPostVideo']);
+                echo($row["blogPostText"] ?? null);
+                echo($row['blogPostImage'] ?? null);
+                echo($row['blogPostLink'] ?? null);
+                echo($row['blogPostVideo'] ?? null);
                 echo("</div>");
             }
             echo("</div>");        

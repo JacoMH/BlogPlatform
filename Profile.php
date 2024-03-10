@@ -31,9 +31,13 @@
         echo("Welcome back, "); echo($_SESSION["firstName"]);
         ?>
         </div>
+        <button onclick="importImage()">Open File Dialog</button> <!-- import image from imgur -->
+        
         <div class="profilePic">
             
         </div>
+
+        
         <div class="realName">
             <?php
             echo($_SESSION["firstName"]); echo(" "); echo($_SESSION["lastName"]); 
