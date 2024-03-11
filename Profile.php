@@ -73,7 +73,6 @@
             <?php
             //filter will fetch everything again but in different orders, refresh page to do it
             //add like button, works by having a seperate table to identify all the posts that have been liked by the same user.
-            //do if statements depending on the type of post it is, e.g. if its just text then do a just text post, with images has a diff format etc.
             echo("<form method='POST' action='Profile.php'>");
             while ($row = mysqli_fetch_assoc($result)) {
                 $profileID = $row['userID'];
@@ -92,42 +91,11 @@
 
 
                 //fetch the post
-                if ($row['blogPostText'] != "" && $row['blogPostImage'] == "" && $row['blogPostLink'] == "" && $row['blogPostVideo'] == ""){
-                    echo("<div class = 'postContent'>");
-                    echo($row["blogPostText"]);
-                    echo("</div>");
-                }
-                else if ($row['blogPostText'] != "" && $row['blogPostImage'] != "" && $row['blogPostLink'] == "" && $row['blogPostVideo'] == "") {
-                    echo("<div class = 'postContent'>");
-                    echo($row["blogPostText"]);
-                    echo($row['blogPostImage']);
-                    echo("</div>");
-                }
-                else if($row['blogPostText'] != "" && $row['blogPostImage'] != "" && $row['blogPostLink'] != "" && $row['blogPostVideo'] == "") {
+                if($row['blogPostText'] != "") { //add these param afterwards && $row['blogPostImage'] != "" && $row['blogPostLink'] != "" && $row['blogPostVideo'] != ""
                     echo("<div class = 'postContent'>");
                     echo($row["blogPostText"]);
                     echo($row['blogPostImage']);
                     echo($row['blogPostLink']);
-                    echo("</div>");
-                }
-                else if($row['blogPostText'] != "" && $row['blogPostImage'] != "" && $row['blogPostLink'] != "" && $row['blogPostVideo'] != "") {
-                    echo("<div class = 'postContent'>");
-                    echo($row["blogPostText"]);
-                    echo($row['blogPostImage']);
-                    echo($row['blogPostLink']);
-                    echo($row['blogPostVideo']);
-                    echo("</div>");
-                }
-                else if($row['blogPostText'] != "" && $row['blogPostImage'] == "" && $row['blogPostLink'] != "" && $row['blogPostVideo'] != "") {
-                    echo("<div class = 'postContent'>");
-                    echo($row["blogPostText"]);
-                    echo($row['blogPostLink']);
-                    echo($row['blogPostVideo']);
-                    echo("</div>");
-                }
-                else if($row['blogPostText'] != "" && $row['blogPostImage'] == "" && $row['blogPostLink'] == "" && $row['blogPostVideo'] != "") {
-                    echo("<div class = 'postContent'>");
-                    echo($row["blogPostText"]);
                     echo($row['blogPostVideo']);
                     echo("</div>");
                 }
