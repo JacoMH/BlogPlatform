@@ -98,6 +98,14 @@
                     echo($row['blogPostLink']);
                     echo($row['blogPostVideo']);
                     echo("</div>");
+                    $postID = $row['blogPostID'];
+                    $blogPostText = $row['blogPostText'];
+                    //create like/dislike post
+                    $PostLikes = $row['likesOnPost'];
+                    echo("<div class='likeButton' method='POST'>");
+                    echo("<button name = '$postID' >like</button>");
+                    echo("$PostLikes");
+                    echo("</div>");
                 }
                 echo("</div>");
                 $postID = $row['blogPostID'];
@@ -118,6 +126,14 @@
                 
                 if(isset($_POST['CommentButton'])) {
                     echo("hello");
+                }
+
+                //like/dislike post
+                if (isset($_POST[$postID])) {
+                    echo("liked");
+                    $addLike = $mysqli->prepare("INSERT INTO userlikedposts (userID, blogPostID) VALUES($SessionUser, $postID)");
+                    $addLike->execute();
+                    header("Refresh:0");
                 }
             echo("</form>");
             }

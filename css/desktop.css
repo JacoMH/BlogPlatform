@@ -176,3 +176,11 @@ textarea {
     display: flex;
     justify-content: left;
 }
+
+
+.likeButton{
+    margin-left: 10px;
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+}
