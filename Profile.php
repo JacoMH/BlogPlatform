@@ -31,11 +31,19 @@
         echo("Welcome back, "); echo($_SESSION["firstName"]);
         ?>
         </div>
-        <button onclick="importImage()">Open File Dialog</button> <!-- import image from imgur -->
-        
+        <form method="POST">
+        <button type="Submit" onclick="importImage()" name="profilePic">Open File Dialog</button> <!-- import image from image address on web -->
+        </form>
+
         <div class="profilePic">
             
         </div>
+
+        <?php
+            if (isset($_POST['profilePic'])) {
+                require_once('additionsToPage/addImage.php');
+            }
+        ?>
 
         
         <div class="realName">
