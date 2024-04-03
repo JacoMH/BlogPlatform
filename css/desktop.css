@@ -184,3 +184,10 @@ textarea {
     flex-direction: row;
     text-align: center;
 }
+
+.imgChange{
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    padding: 0px 100px;
+}

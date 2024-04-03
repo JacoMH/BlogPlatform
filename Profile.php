@@ -32,7 +32,7 @@
         ?>
         </div>
         <form method="POST">
-        <button type="Submit" onclick="importImage()" name="profilePic">Open File Dialog</button> <!-- import image from image address on web -->
+        <button type="Submit" name="profilePic">Open File Dialog</button> <!-- import image from image address on web -->
         </form>
 
         <div class="profilePic">
@@ -41,7 +41,14 @@
 
         <?php
             if (isset($_POST['profilePic'])) {
-                require_once('additionsToPage/addImage.php');
+                echo("<div class='imgChange' method='POST' action='Profile.php'>");
+                echo("<input type='text' name='imageLink' placeholder='image address here...'>");
+                echo("<button type='submit' name='imgButton' >add</button>");
+                echo("</div>");
+            }
+            //if submit                     //figure out how to store the image address in database, refresh, load it and when dropdown menu comes up it displays it.
+            if (isset($_POST['imgButton'])) {
+                echo("hello");
             }
         ?>
 
