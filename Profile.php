@@ -117,12 +117,13 @@
                     $blogPostText = $row['blogPostText'];
                     //create like/dislike post
                     $PostLikes = $row['likesOnPost'];
-                    echo("<div class='likeButton' method='POST'>");
-                    echo("<button name = '$postID' >like</button>");
+                    echo("<form class='likeButton' method='POST' action='Profile.php'>");
+                    echo("<button name = '$postID'>like</button>");
                     echo("$PostLikes");
-                    echo("</div>");
+                    echo("</form>");
                 }
                 echo("</div>");
+                echo($_POST[$postID]);
                 $postID = $row['blogPostID'];
                 $blogPostText = $row['blogPostText'];
                 
@@ -145,7 +146,7 @@
 
                 //like/dislike post
                 if (isset($_POST[$postID])) {
-                    echo("liked");
+                    //add something where it ignores the error if it doesnt add to the database as it is just saying that the like is already there
                     $addLike = $mysqli->prepare("INSERT INTO userlikedposts (userID, blogPostID) VALUES($SessionUser, $postID)");
                     $addLike->execute();
                     header("Refresh:0");
@@ -158,8 +159,6 @@
         <?php
                 //query which selects all profile stuff, lists posts etc. made. If query returns nothing then 2 buttons are displayed telling the user to log in or reg
                 include("Includes/footer.php");
-
-                //for images use imgur, figure out how to post images submitted by people, then get the link from the website to use.
         ?>
 
     </main>
