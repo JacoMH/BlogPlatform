@@ -119,11 +119,22 @@
                     $PostLikes = $row['likesOnPost'];
                     echo("<form class='likeButton' method='POST' action='Profile.php'>");
                     echo("<button name = '$postID'>like</button>");
-                    echo("$PostLikes");
+
+                    //gather total likes and adds it to post
+                    $likesQuery = "SELECT blogpostID FROM userlikedposts WHERE blogpostID = '$postID'";
+                    $likes = mysqli_query($mysqli, $likesQuery);
+                    $LikeNum = mysqli_fetch_assoc($likes);
+                    $like = $LikeNum['blogpostID'] ?? null;
+                    echo($like);
+                    if ($like == 0) {
+                        echo($like);
+                    }
+                    else {
+                        echo("poooooo0");
+                    }
                     echo("</form>");
                 }
                 echo("</div>");
-                echo($_POST[$postID]);
                 $postID = $row['blogPostID'];
                 $blogPostText = $row['blogPostText'];
                 
