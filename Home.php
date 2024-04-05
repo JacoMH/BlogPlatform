@@ -28,14 +28,15 @@
         Most Liked Bloggers
         <?php 
             //carousel of maximum 3 top Bloggers in terms of total likes
-            $blogger = "SELECT * FROM user"; //found out how to gather a finite amount of most liked blogs here: https://stackoverflow.com/questions/4874731/how-can-i-select-the-top-10-largest-numbers-from-a-database-column-using-sql
+            $blogger = "SELECT username, profileLikes, userID FROM user"; //found out how to gather a finite amount of most liked blogs here: https://stackoverflow.com/questions/4874731/how-can-i-select-the-top-10-largest-numbers-from-a-database-column-using-sql
             $bloggerResult = mysqli_query($mysqli, $blogger);
             $blogger = mysqli_fetch_assoc($bloggerResult);
 
-            $username = $blogger['username'];
-            while (mysqli_fetch_assoc($bloggerResult)) {
-                echo("<div class='postContent'>"); //add profile pictures aswell when that works
-                echo("$username");
+            while (mysqli_fetch_assoc($bloggerResult)) {    //add profile pictures aswell when that works
+                echo("<div class='postContent'>");
+                echo($blogger['username']);
+                echo($blogger['profileLikes']);
+                echo($blogger['userID']);
                 echo("</div>");
             }
         ?>
