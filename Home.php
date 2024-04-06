@@ -26,20 +26,24 @@
           
             
         Most Liked Bloggers
-        <?php 
-            //carousel of maximum 3 top Bloggers in terms of total likes
-            $blogger = "SELECT username, profileLikes, userID FROM user"; //found out how to gather a finite amount of most liked blogs here: https://stackoverflow.com/questions/4874731/how-can-i-select-the-top-10-largest-numbers-from-a-database-column-using-sql
-            $bloggerResult = mysqli_query($mysqli, $blogger);
-            $blogger = mysqli_fetch_assoc($bloggerResult);
+        <?php
 
-            while (mysqli_fetch_assoc($bloggerResult)) {    //add profile pictures aswell when that works
+            //carousel of maximum 3 top Bloggers in terms of total likes
+            $bloggerQuery = "SELECT * FROM user ORDER BY profileLikes DESC LIMIT 6"; //found out how to gather a finite amount of most liked blogs here: https://stackoverflow.com/questions/4874731/how-can-i-select-the-top-10-largest-numbers-from-a-database-column-using-sql
+            $bloggerResult = mysqli_query($mysqli, $bloggerQuery);              //learnt limits here: https://www.w3schools.com/mysql/mysql_limit.asp
+            $bloggerObject = mysqli_fetch_assoc($bloggerResult);
+
+            while ($bloggerObject = mysqli_fetch_assoc($bloggerResult)) {    //add profile pictures aswell when that works
                 echo("<div class='postContent'>");
-                echo($blogger['username']);
-                echo($blogger['profileLikes']);
-                echo($blogger['userID']);
+                echo($bloggerObject['username']);
+                echo($bloggerObject['profileLikes']);
+                echo($bloggerObject['userID']);
+                $userID = $bloggerObject['userID'];
+                echo("<a href='user.php?user=$userID'>Profile</a>");
                 echo("</div>");
             }
         ?>
+
         <?php
         include("Includes/footer.php");
         ?>
