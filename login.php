@@ -42,7 +42,6 @@
                     $last_name = $row["lastName"];
                     $profilePic = $row["profilePicture"];
                     $bannerPic = $row["bannerPicture"];
-
                 }
                 if ($username == $check_username && $securityAnswer == $check_SecurityQ) {
                     $valid = password_verify ($password, $check_password);

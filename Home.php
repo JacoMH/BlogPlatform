@@ -18,20 +18,17 @@
         include("Includes/header1.php");
         ?>
         </div>
-
+        <search>
             <form class="search" method="GET">
-                <input  class = "search" name="searchQuery" type="text" placeholder="Enter..">
+                <input  class = "search" name="searchQuery" type="text" placeholder="Search For User..">
                 <button type="submit" name="searchButton">Search</button>
             </form>
-
+        </search>
             <?php
                 //get search url
-                $searchQuery = $_GET['searchQuery'];
                 if (isset($_GET["searchButton"])) {
-                    header("Refresh:0; url='Home.php?s=$searchQuery'");
-                }
-                if ($_GET['s']) {
-                    echo($searchQuery);
+                    $searchQuery = $_GET['searchQuery'];
+                    header("Refresh:0; url='search.php?s=$searchQuery'");
                 }
                 
             ?>
