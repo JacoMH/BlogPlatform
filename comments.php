@@ -73,8 +73,8 @@
         if (isset($_POST['makeCommentButton']) && $_POST['textContent'] != "") {
             $CommentContent = $_POST['textContent'] ?? null;
             $addToComments = $mysqli->prepare("INSERT INTO commentblogpost (blogPostID, userID, commentText, TimeOfComment) VALUES ('$currentPost', '$commenterUserID', '$CommentContent', now())");
-            $addToComments->execute();
-            header("Refresh:0; url=comments.php?post=$currentPost");
+            $addToComments->execute();header("Refresh:0; url=comments.php?post=$currentPost");
+            
         }
 
         //comment section

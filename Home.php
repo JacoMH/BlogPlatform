@@ -19,10 +19,22 @@
         ?>
         </div>
 
-            <div class="search">
-                <input  class = "search" type="text" placeholder="Enter..">
-                <button type="submit"><i class="searchButton"></i>Search</button>
-            </div>
+            <form class="search" method="GET">
+                <input  class = "search" name="searchQuery" type="text" placeholder="Enter..">
+                <button type="submit" name="searchButton">Search</button>
+            </form>
+
+            <?php
+                //get search url
+                $searchQuery = $_GET['searchQuery'];
+                if (isset($_GET["searchButton"])) {
+                    header("Refresh:0; url='Home.php?s=$searchQuery'");
+                }
+                if ($_GET['s']) {
+                    echo($searchQuery);
+                }
+                
+            ?>
           
             
         Most Liked Bloggers
