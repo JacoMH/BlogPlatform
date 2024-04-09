@@ -15,7 +15,13 @@
 <body>
     <main class="container">
         <?php
-        include("Includes/header1.php");
+        session_start();
+        if (!empty($_SESSION['username'])) {
+            require_once('includes/profileShortcut.php');
+        }
+        else {
+            require_once('includes/loginReg.php');
+        }
         ?>
         </div>
         <search>

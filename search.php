@@ -11,6 +11,9 @@
     <title>Search | <?php echo($Query) ?></title>
 </head>
 <body>
+    <?php
+    require_once('includes/HomeShortcut.php');
+    ?>
     <search>
         <form class="search" method="GET">
             <input  class = "search" name="searchQuery" type="text" placeholder="Search For User.." value=<?php $Query ?>>

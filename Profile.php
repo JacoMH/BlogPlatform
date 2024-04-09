@@ -1,7 +1,10 @@
 
 <?php
-    require_once('includes/config.php');
     session_start();
+    if(empty($_SESSION['username'])) {
+        header("refresh:0; url='login.php'");
+    }
+    require_once('includes/config.php');
     $SessionUser = $_SESSION['userID'];
     $postContent = "";
     //display posts made by user
@@ -21,7 +24,7 @@
 <body>
     <main class="container">
         <?php
-            include("Includes/header2.php");
+            include("Includes/HomeShortcut.php");
         ?>
         <div class="banner">
             
@@ -144,35 +147,40 @@
                     //updates total likes in user table
                     $totalLikesQuery = $mysqli->prepare("UPDATE user SET profileLikes = (SELECT SUM(likesOnPost) As 'totalLikes' FROM blogpost WHERE userID = '$profileID') WHERE userID = '$profileID'");
                     $totalLikesQuery->execute();
+
+                    //toggle comments
+                    if ($row['commentsEnabled'] == "on") {
+                        echo("<a href='comments.php?post=$postID'>Comments</a>");
+                    }
+                    else if ($row['commentsEnabled'] == "") {
+                        echo("<div class='smallCommentText'>");
+                        echo("Comments Disabled");
+                        echo("</div>");
+                    }
+                    echo("<div class='smallCommentText'>");
+                        echo($row['DateAndTime']);
+                    echo("</div>");
+                    
+                    if(isset($_POST['CommentButton'])) {
+                        echo("hello");
+                    }
+
+                    //like/dislike post
+                    if (isset($_POST[$postID])) {
+                        //add something where it ignores the error if it doesnt add to the database as it is just saying that the like is already there
+                        $addLike = $mysqli->prepare("INSERT INTO userlikedposts (userID, blogPostID) VALUES($SessionUser, $postID)");
+                        $addLike->execute();
+                        header("Refresh:0");
+                    }
+                }
+                else {
+                    echo("<h2>No Posts Made</h2>");
+                    echo("please work");
                 }
                 echo("</div>");
                 $postID = $row['blogPostID'];
                 $blogPostText = $row['blogPostText'];
                 
-                //toggle comments
-                if ($row['commentsEnabled'] == "on") {
-                    echo("<a href='comments.php?post=$postID'>Comments</a>");
-                }
-                else if ($row['commentsEnabled'] == "") {
-                    echo("<div class='smallCommentText'>");
-                    echo("Comments Disabled");
-                    echo("</div>");
-                }
-                echo("<div class='smallCommentText'>");
-                    echo($row['DateAndTime']);
-                echo("</div>");
-                
-                if(isset($_POST['CommentButton'])) {
-                    echo("hello");
-                }
-
-                //like/dislike post
-                if (isset($_POST[$postID])) {
-                    //add something where it ignores the error if it doesnt add to the database as it is just saying that the like is already there
-                    $addLike = $mysqli->prepare("INSERT INTO userlikedposts (userID, blogPostID) VALUES($SessionUser, $postID)");
-                    $addLike->execute();
-                    header("Refresh:0");
-                }
             echo("</form>");
             }
             ?>

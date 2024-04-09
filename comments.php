@@ -46,6 +46,9 @@
     <link rel="stylesheet" type="text/css" href="css\desktop.css" media="only screen and (min-width: 800px)">
 </head>
 <body class="container">
+    <?php
+        require_once('includes/HomeShortcut.php');
+    ?>
     <div class="AllPostsContainer">
         <?php
             echo("<div class='post'>");

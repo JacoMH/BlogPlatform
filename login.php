@@ -14,7 +14,7 @@
 <body>
     <main class="container">
         <?php
-            include("Includes/header1.php");
+            include("Includes/HomeShortcut.php");
             ?>
     
     <div class="container">
