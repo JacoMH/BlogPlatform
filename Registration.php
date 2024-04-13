@@ -14,7 +14,7 @@
 <body>
     <main class="container">
         <?php
-            include("Includes/header1.php");
+            include("Includes/HomeShortcut.php");
             ?>
             <form class="logRegContainer" name="registration" onSubmit="checkRegFunction()" method="POST" action="Registration.php">
                 First Name: <input type="text" name="fname">
@@ -25,7 +25,10 @@
                 Password: <input type="password" name="password">
                 Security Question: Where was your mother born?
                 <input type="text" name="securityAns">
-                <button type="submit" name="regButton"><i class="loginButton" ></i>Register</button>                
+                <button type="submit" name="regButton"><i class="loginButton" ></i>Register</button>
+                <div class="newOrAlrUser">
+                    Already User? <a href="login.php">Login here</a>
+                </div>              
             </form>
             <?php
                 if (isset($_POST['regButton']) && $_POST["fname"] != "" && $_POST["lname"] != "" && $_POST["dateTime"] != null && $_POST["email"] != null && $_POST["username"] != null && $_POST["password"] != null && $_POST["securityAns"] != null) {

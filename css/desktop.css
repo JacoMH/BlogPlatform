@@ -13,7 +13,6 @@
 
 a{
     text-decoration: none;
-    color: grey;
 }
 
 a:hover{
@@ -190,4 +189,13 @@ textarea {
     flex-direction: row;
     margin: auto;
     padding: 0px 100px;
+}
+
+.newOrAlrUser {
+    text-align: center;
+    color: white;
+}
+
+.newOrAlrUser:link {
+    color: white;
 }

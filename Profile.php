@@ -175,21 +175,18 @@
     
                         //like/dislike post
                         if (isset($_POST[$postID])) {
-                            $checkIfLikedQuery = "SELECT userID FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = $postID";
-                            $checkIfLikedLink = mysqli_query($mysqli, $fetchUserProfile);
-                            $checkIfLiked = mysqli_fetch_assoc($checkIfLikedLink);
-                            print($checkIfLiked);
+                            $checkIfLikedQuery = mysqli_query($mysqli, "SELECT * FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '$postID'");
+                            $CheckLikedNumRows = mysqli_num_rows($checkIfLikedQuery); //found a method of liking and unliking a post without inserting duplicate keys into the database here: https://stackoverflow.com/questions/2848904/check-if-record-exists By User Dominic Rodger
 
-                            if (empty($checkIfLiked)) {
-                                echo("hello");
-                                $addLike = $mysqli->prepare("INSERT INTO userlikedposts (userID, blogPostID) VALUES($SessionUser, $postID)");
-                                $addLike->execute();
-                            }
-                            else {
+                            if ($CheckLikedNumRows > 0) {
                                 $removeLike = $mysqli->prepare("DELETE FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '$postID'");
                                 $removeLike->execute();
                             }
-                            //add something where it ignores the error if it doesnt add to the database as it is just saying that the like is already there
+                            else {
+                                $addLike = $mysqli->prepare("INSERT INTO userlikedposts (userID, blogPostID) VALUES($SessionUser, $postID)");
+                                $addLike->execute();
+                            }
+                            header("refresh: 0");
                         }
                     }
                     else {

@@ -24,6 +24,9 @@
             Security Question: Where was your mother born?
             <input type="text" name="securityAns">
             <button type="submit" name="logButton"><i class="loginButton"></i>Login</button>
+            <div class="newOrAlrUser">
+                New User? <a href="Registration.php">Sign Up Here</a>
+            </div>
         </form>
         <?php
             if (isset($_POST['logButton']) && $_POST['username'] != "" && $_POST["password"] != "" && $_POST["securityAns"] != "") {

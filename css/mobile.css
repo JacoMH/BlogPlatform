@@ -13,7 +13,6 @@
 
 a{
     text-decoration: none;
-    color: grey;
 }
 
 a:hover{
@@ -170,3 +169,8 @@ textarea {
   .smallCommentText{
     font-size: smaller;
   }
+
+  .newOrAlrUser {
+    text-align: center;
+    color: white;
+}
