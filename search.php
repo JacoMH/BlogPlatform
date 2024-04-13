@@ -15,31 +15,39 @@
     require_once('includes/HomeShortcut.php');
     ?>
     <search>
-        <form class="search" method="GET">
-            <input  class = "search" name="searchQuery" type="text" placeholder="Search For User.." value=<?php $Query ?>>
+        <form class="search" method="POST">
+            <input  class = "search" name="searchQuery" type="text" placeholder="Search For User.." value= <?php echo("$Query"); ?>>
             <button type="submit" name="searchButton">Search</button>
         </form>
     </search>
             <?php
                 //search from this page
-                $enteredSearch = $_GET['searchQuery'];
-                if (isset($_GET['searchButton'])) {
-                    $enteredSearch = $_GET['searchQuery'];
+                if (isset($_POST['searchButton'])) {
+                    $search = $_POST['searchQuery'];
+                    header("Refresh:0; url='search.php?s=$search'");
+
                 }
 
                 //search
                 if ($_GET['s']) {
-                    $searchQuery = $_GET['s'];
-                    $findUsersQuery = "SELECT * FROM user WHERE username LIKE '%$searchQuery%' OR userID LIKE '%$searchQuery%'";
+                    $findUsersQuery = "SELECT * FROM user WHERE username LIKE '%$Query%' OR userID LIKE '%$Query%'";
                     $findUsersLink = mysqli_query($mysqli, $findUsersQuery);           
                     $findUsersResult = mysqli_fetch_assoc($findUsersLink);
-                }
-                    while ($findUsersResult = mysqli_fetch_assoc($findUsersLink)) {
-                        $username = $findUsersResult['username'];
-                        $userID = $findUsersResult['userID'];
-                        echo("<h3>$username</h3>");
-                        echo("<a href='user.php?user=$userID'>profile</a>");
+
+                    
+                    if (empty($findUsersResult)) { //if no results
+                        echo("No Results.");
                     }
+                    else {
+                        while ($findUsersResult = mysqli_fetch_assoc($findUsersLink)) { //if results
+                            $username = $findUsersResult['username'];
+                            $userID = $findUsersResult['userID'];
+                            echo("<h3>$username</h3>");
+                            echo("<a href='user.php?user=$userID'>profile</a>");
+                        }
+                    }
+
+                }
             ?>
     </div>
 </body>

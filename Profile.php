@@ -54,15 +54,18 @@
 
         <?php
             if (isset($_POST['profilePic'])) {
-                echo("<div class='imgChange' method='POST' action='Profile.php'>");
+                echo("<div class='imgChange' method='GET' action='Profile.php'>");
                 echo("<input type='text' name='imageLink' placeholder='image address here...'>");
                 echo("<button type='submit' name='imgButton' >add</button>");
                 echo("</div>");
+                //if submit
+                if (isset($_GET['imgButton'])) {
+                    echo("hello");
+                    print_r($_POST);
+                    echo("efhiaoejfioajefoiajefoiaje");
+                }
             }
             //if submit                     //figure out how to store the image address in database, refresh, load it and when dropdown menu comes up it displays it.
-            if (isset($_POST['imgButton'])) {
-                echo("hello");
-            }
         ?>
 
         
@@ -101,88 +104,106 @@
             <?php
             //filter will fetch everything again but in different orders, refresh page to do it
             //add like button, works by having a seperate table to identify all the posts that have been liked by the same user.
-            echo("<form method='POST' action='Profile.php'>");
-            while ($row = mysqli_fetch_assoc($result)) {
-                $profileID = $row['userID'];
-                echo("<div class='post'>");
-                //fetch their profile
-                $fetchUserProfile = "SELECT profilePicture, username FROM user where userID = '$profileID'";
+            if (empty($result)) {
+                echo("No Posts Yet");
+            }
+            else {
+                echo("<form method='POST' action='Profile.php'>");
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $profileID = $row['userID'];
+                    echo("<div class='post'>");
+                    //fetch their profile
+                    $fetchUserProfile = "SELECT profilePicture, username FROM user where userID = '$profileID'";
+    
+                    //profile pic
+                    echo("<div class = 'userProfilePic'>");
+                    $profileResult = mysqli_query($mysqli, $fetchUserProfile);
+                    $profile = mysqli_fetch_assoc($profileResult);
+                    echo($profile["profilePicture"]);
+                    echo("</div>");
+    
+    
+    
+    
+                    //fetch the post
+                    if($row['blogPostText'] != "") { //add these param afterwards && $row['blogPostImage'] != "" && $row['blogPostLink'] != "" && $row['blogPostVideo'] != ""
+                        echo("<div class = 'postContent'>");
+                        echo($row["blogPostText"]);
+                        echo($row['blogPostImage']);
+                        echo($row['blogPostLink']);
+                        echo($row['blogPostVideo']);
+                        echo("</div>");
+                        $postID = $row['blogPostID'];
+                        $blogPostText = $row['blogPostText'];
+                        
+                        //create like/dislike post
+                        $PostLikes = $row['likesOnPost'];
+                        echo("<form class='likeButton' method='POST' action='Profile.php'>");
+                        echo("<button name = '$postID'>like</button>");
+    
+                        //gather total likes and adds it to post to display and store in the database
+                        $likesQuery = "SELECT count(blogpostID) As 'likeCount' FROM userlikedposts WHERE blogpostID = '$postID'";
+                        $likes = mysqli_query($mysqli, $likesQuery);
+                        $LikeNum = mysqli_fetch_assoc($likes);
+                        echo($LikeNum['likeCount']);
+                        
+                        //updates likes in post table
+                        $likestore = $LikeNum['likeCount'];
+                        $storeLikesQuery = $mysqli->prepare("UPDATE blogpost SET likesOnPost = '$likestore' WHERE blogpostID = '$postID'");
+                        $storeLikesQuery->execute();
+    
+                        //updates total likes in user table
+                        $totalLikesQuery = $mysqli->prepare("UPDATE user SET profileLikes = (SELECT SUM(likesOnPost) As 'totalLikes' FROM blogpost WHERE userID = '$profileID') WHERE userID = '$profileID'");
+                        $totalLikesQuery->execute();
+    
+                        //toggle comments
+                        if ($row['commentsEnabled'] == "on") {
+                            echo("<a href='comments.php?post=$postID'>Comments</a>");
+                        }
+                        else if ($row['commentsEnabled'] == "") {
+                            echo("<div class='smallCommentText'>");
+                            echo("Comments Disabled");
+                            echo("</div>");
+                        }
+                        echo("<div class='smallCommentText'>");
+                            echo($row['DateAndTime']);
+                        echo("</div>");
+                        
+                        if(isset($_POST['CommentButton'])) {
+                            echo("hello");
+                        }
+    
+                        //like/dislike post
+                        if (isset($_POST[$postID])) {
+                            $checkIfLikedQuery = "SELECT userID FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = $postID";
+                            $checkIfLikedLink = mysqli_query($mysqli, $fetchUserProfile);
+                            $checkIfLiked = mysqli_fetch_assoc($checkIfLikedLink);
+                            print($checkIfLiked);
 
-                //profile pic
-                echo("<div class = 'userProfilePic'>");
-                $profileResult = mysqli_query($mysqli, $fetchUserProfile);
-                $profile = mysqli_fetch_assoc($profileResult);
-                echo($profile["profilePicture"]);
-                echo("</div>");
-
-
-
-
-                //fetch the post
-                if($row['blogPostText'] != "") { //add these param afterwards && $row['blogPostImage'] != "" && $row['blogPostLink'] != "" && $row['blogPostVideo'] != ""
-                    echo("<div class = 'postContent'>");
-                    echo($row["blogPostText"]);
-                    echo($row['blogPostImage']);
-                    echo($row['blogPostLink']);
-                    echo($row['blogPostVideo']);
+                            if (empty($checkIfLiked)) {
+                                echo("hello");
+                                $addLike = $mysqli->prepare("INSERT INTO userlikedposts (userID, blogPostID) VALUES($SessionUser, $postID)");
+                                $addLike->execute();
+                            }
+                            else {
+                                $removeLike = $mysqli->prepare("DELETE FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '$postID'");
+                                $removeLike->execute();
+                            }
+                            //add something where it ignores the error if it doesnt add to the database as it is just saying that the like is already there
+                        }
+                    }
+                    else {
+                        echo("<h2>No Posts Made</h2>");
+                        echo("please work");
+                    }
                     echo("</div>");
                     $postID = $row['blogPostID'];
                     $blogPostText = $row['blogPostText'];
-                    //create like/dislike post
-                    $PostLikes = $row['likesOnPost'];
-                    echo("<form class='likeButton' method='POST' action='Profile.php'>");
-                    echo("<button name = '$postID'>like</button>");
-
-                    //gather total likes and adds it to post to display and store in the database
-                    $likesQuery = "SELECT count(blogpostID) As 'likeCount' FROM userlikedposts WHERE blogpostID = '$postID'";
-                    $likes = mysqli_query($mysqli, $likesQuery);
-                    $LikeNum = mysqli_fetch_assoc($likes);
-                    echo($LikeNum['likeCount']);
                     
-                    //updates likes in post table
-                    $likestore = $LikeNum['likeCount'];
-                    $storeLikesQuery = $mysqli->prepare("UPDATE blogpost SET likesOnPost = '$likestore' WHERE blogpostID = '$postID'");
-                    $storeLikesQuery->execute();
-
-                    //updates total likes in user table
-                    $totalLikesQuery = $mysqli->prepare("UPDATE user SET profileLikes = (SELECT SUM(likesOnPost) As 'totalLikes' FROM blogpost WHERE userID = '$profileID') WHERE userID = '$profileID'");
-                    $totalLikesQuery->execute();
-
-                    //toggle comments
-                    if ($row['commentsEnabled'] == "on") {
-                        echo("<a href='comments.php?post=$postID'>Comments</a>");
-                    }
-                    else if ($row['commentsEnabled'] == "") {
-                        echo("<div class='smallCommentText'>");
-                        echo("Comments Disabled");
-                        echo("</div>");
-                    }
-                    echo("<div class='smallCommentText'>");
-                        echo($row['DateAndTime']);
-                    echo("</div>");
-                    
-                    if(isset($_POST['CommentButton'])) {
-                        echo("hello");
-                    }
-
-                    //like/dislike post
-                    if (isset($_POST[$postID])) {
-                        //add something where it ignores the error if it doesnt add to the database as it is just saying that the like is already there
-                        $addLike = $mysqli->prepare("INSERT INTO userlikedposts (userID, blogPostID) VALUES($SessionUser, $postID)");
-                        $addLike->execute();
-                        header("Refresh:0");
-                    }
+                echo("</form>");
                 }
-                else {
-                    echo("<h2>No Posts Made</h2>");
-                    echo("please work");
-                }
-                echo("</div>");
-                $postID = $row['blogPostID'];
-                $blogPostText = $row['blogPostText'];
-                
-            echo("</form>");
             }
+            
             ?>
         </div>
     
