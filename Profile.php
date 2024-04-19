@@ -10,6 +10,12 @@
     //display posts made by user
     $userPostQuery = "SELECT * FROM blogpost WHERE userID = '$SessionUser'";
     $result = mysqli_query($mysqli, $userPostQuery);
+
+    //fetch total likes
+    $profileLikesQuery = "SELECT profileLikes FROM user WHERE userID = '$SessionUser'";
+    $profileLikesLink = mysqli_query($mysqli, $profileLikesQuery);
+    $profileLikesDisplay = mysqli_fetch_assoc($profileLikesLink);
+    echo($profileLikesDisplay['profileLikes']);
 ?>
 
 <!DOCTYPE html>
@@ -29,7 +35,6 @@
         <div class="banner">
             
         </div>
-        <div class="topbanner">
         <?php
         //welcome
         echo("<div>");
@@ -37,10 +42,8 @@
         echo("</div>");
         //total likes on page
         echo("<div>");
-        $profileLikesQuery = "SELECT profileLikes FROM user WHERE userID = '$SessionUser'";
-        $profileLikesLink = mysqli_query($mysqli, $profileLikesQuery);
-        $profileLikesDisplay = mysqli_fetch_assoc($profileLikesLink);
-        echo($profileLikesDisplay['profileLikes']); echo(" "); echo("Profile Likes");
+        $profileLikes = $profileLikesDisplay['profileLikes'];
+        echo($profileLikes); echo(" "); echo("Profile Likes");
         echo("</div>");
         ?>
         </div>
@@ -52,21 +55,22 @@
             
         </div>
 
-        <?php
-            if (isset($_POST['profilePic'])) {
-                echo("<div class='imgChange' method='GET' action='Profile.php'>");
-                echo("<input type='text' name='imageLink' placeholder='image address here...'>");
-                echo("<button type='submit' name='imgButton' >add</button>");
-                echo("</div>");
+        
+         <?php   if (isset($_POST['profilePic'])) { ?>
+                <div class='imgChange' method='POST' action='Profile.php'>
+                    <input type='text' name='imageLink' placeholder='image address here...'>
+                    <button type='submit' name='imgButton' >add</button>
+                </div>
+                <?php
                 //if submit
-                if (isset($_GET['imgButton'])) {
+                if (isset($_POST['imgButton']) && !empty($_POST['imgButton'])) {
                     echo("hello");
                     print_r($_POST);
-                    echo("efhiaoejfioajefoiajefoiaje");
+                    echo("efhiaoejfioajefoiajefoiaje");          
                 }
-            }
+            } 
             //if submit                     //figure out how to store the image address in database, refresh, load it and when dropdown menu comes up it displays it.
-        ?>
+?>
 
         
         <div class="realName">
@@ -97,7 +101,7 @@
                 $commentToggle = $_POST['commentToggle'] ?? null;
                 $addToPosts = $mysqli->prepare("INSERT INTO blogpost (userID, blogPostText, commentsEnabled, DateAndTime) VALUES ('$SessionUser', '$postContent', '$commentToggle', now())");
                 $addToPosts->execute();
-                header("Refresh:0");
+                header("location = Profile.php");
             }
         ?>
         <div class="AllPostsContainer">
@@ -122,7 +126,12 @@
                     echo($profile["profilePicture"]);
                     echo("</div>");
     
-    
+                    if (empty($row)) {
+                        echo("not filled");
+                    }
+                    else{
+                        echo("filled");
+                    }
     
     
                     //fetch the post
@@ -168,10 +177,6 @@
                         echo("<div class='smallCommentText'>");
                             echo($row['DateAndTime']);
                         echo("</div>");
-                        
-                        if(isset($_POST['CommentButton'])) {
-                            echo("hello");
-                        }
     
                         //like/dislike post
                         if (isset($_POST[$postID])) {
@@ -181,12 +186,14 @@
                             if ($CheckLikedNumRows > 0) {
                                 $removeLike = $mysqli->prepare("DELETE FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '$postID'");
                                 $removeLike->execute();
+                                
                             }
                             else {
                                 $addLike = $mysqli->prepare("INSERT INTO userlikedposts (userID, blogPostID) VALUES($SessionUser, $postID)");
                                 $addLike->execute();
+
                             }
-                            header("refresh: 0");
+                            header("refresh:0; url='Profile.php'");
                         }
                     }
                     else {

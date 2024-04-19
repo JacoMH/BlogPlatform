@@ -1,6 +1,6 @@
 <header>
     <div id="logo">
-       <h2>Blog Platform</h2> 
+       <a href="Home.php"><h2>Blog Platform</h2></a> 
     </div>
     <nav>
         <ul>

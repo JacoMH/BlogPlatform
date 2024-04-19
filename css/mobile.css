@@ -79,12 +79,11 @@ li {
 }
 
 .profilePic{
-    background:brown;
-    border-radius: 300px;
-    padding: 40px;
-    width: 40px;
-    height: 40px;
-    z-index: -1;
+    width: 100px;
+    height: 100px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
 }
 
 .realName, .profilePic, .username{

@@ -79,12 +79,11 @@ li {
 }
 
 .profilePic{
-    background:brown;
-    border-radius: 300px;
-    padding: 40px;
-    width: 40px;
-    height: 40px;
-    z-index: -1;
+    width: 100px;
+    height: 100px;
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
 }
 
 .realName, .profilePic, .username{
@@ -198,4 +197,27 @@ textarea {
 
 .newOrAlrUser:link {
     color: white;
+}
+
+.profilePhoto {
+    display: flex;
+    width: 100px;
+    height: 100px; /* found how to crop the images in a circular way here by User Johnny Kutnowski On Oct 17th 2014: https://stackoverflow.com/questions/26421274/css-circular-cropping-of-rectangle-image */
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    background: none;
+    margin: auto;
+    object-fit: cover;
+}
+
+.profilePhoto:hover{
+    background: black;
+    opacity: 30%;
+}
+
+
+.welcome{
+    display: flex;
+    justify-content: space-between;
 }

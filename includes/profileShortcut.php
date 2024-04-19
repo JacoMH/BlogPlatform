@@ -1,6 +1,6 @@
 <header>
     <div id="logo">
-       <h2>Blog Platform</h2> 
+    <a href="Home.php"><h2>Blog Platform</h2></a> 
     </div>
     <nav>
         <ul>
@@ -9,7 +9,7 @@
     </nav>
     <nav>
         <ul>
-            <li><a href="Profile.php"><img src=<?php $_SESSION['profilePic'] ?>></a></li>
+            <li class = "profilePhoto"><a href="Profile.php"><img src=<?php echo($_SESSION['profilePicture'])?> alt = "Profile Picture"></a></li>
             <p> <?php echo($_SESSION['username']); ?> </p>
         </ul>
     </nav>

@@ -44,7 +44,7 @@
         <?php
 
             //carousel of maximum 3 top Bloggers in terms of total likes
-            $bloggerQuery = "SELECT * FROM user ORDER BY profileLikes DESC LIMIT 100"; //found out how to gather a finite amount of most liked blogs here: https://stackoverflow.com/questions/4874731/how-can-i-select-the-top-10-largest-numbers-from-a-database-column-using-sql
+            $bloggerQuery = "SELECT * FROM user ORDER BY profileLikes DESC LIMIT 4"; //found out how to gather a finite amount of most liked blogs here: https://stackoverflow.com/questions/4874731/how-can-i-select-the-top-10-largest-numbers-from-a-database-column-using-sql
             $bloggerResult = mysqli_query($mysqli, $bloggerQuery);              //learnt limits here: https://www.w3schools.com/mysql/mysql_limit.asp
             $bloggerObject = mysqli_fetch_assoc($bloggerResult);
 
