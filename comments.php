@@ -52,8 +52,8 @@
     <div class="AllPostsContainer">
         <?php
             echo("<div class='post'>");
-            echo("<div class = 'userProfilePic'>");
-            echo($profile["profilePicture"]);
+            echo("<div class = 'userPhoto'>");
+            echo("<img src='{$profile['profilePicture']}' alt= 'Profile Picture'>");
             echo($profile["username"]);
             echo("</div>");
             if($row['blogPostText'] != "") {   //  add this when other bit is done && $row['blogPostImage'] != "" && $row['blogPostLink'] != "" && $row['blogPostVideo'] != ""

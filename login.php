@@ -45,6 +45,7 @@
                     $last_name = $row["lastName"];
                     $profilePic = $row["profilePicture"];
                     $bannerPic = $row["bannerPicture"];
+                    $profileLikes = $row["profileLikes"];
                 }
                 if ($username == $check_username && $securityAnswer == $check_SecurityQ) {
                     $valid = password_verify ($password, $check_password);
@@ -56,6 +57,7 @@
                         $_SESSION["lastName"] = $last_name;
                         $_SESSION["profilePicture"] = $profilePic;
                         $_SESSION["bannerPicture"] = $bannerPic;
+                        $_SESSION['profileLikes'] = $profileLikes;
                         echo("<h2>logged in</h2>");
                         header("Location: Profile.php", true, 301);         
                     }

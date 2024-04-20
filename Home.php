@@ -58,7 +58,66 @@
                 echo("</div>");
             }
         ?>
+        Most Liked posts
+        <?php
+        $mostLikedPostsQuery = mysqli_query($mysqli, "SELECT * FROM blogpost ORDER BY likesOnPost DESC LIMIT 5");
+        
+        While ($post = mysqli_fetch_assoc($mostLikedPostsQuery)) {
+                echo("<div class = 'userPhoto'>");
 
+                //get the poster profile
+                $getProfilePictureQuery = mysqli_query($mysqli, "SELECT * FROM user WHERE userID = '{$post['userID']}'");
+                
+                While ($PosterProfile = mysqli_fetch_assoc($getProfilePictureQuery)) {
+                    echo("<img src='{$PosterProfile['profilePicture']}' alt= 'Profile Picture'>");
+                    echo("</div>");
+                    echo("<div class='username' style='font-size: large;'> {$PosterProfile['username']}</div>");
+                }
+
+
+                echo("<div class = 'postContent'>");
+                echo($post["blogPostText"]);
+                echo($post['blogPostImage']);
+                echo($post['blogPostLink']);
+                echo($post['blogPostVideo']);
+                $postID = $post['blogPostID'];
+                echo("</div>");
+
+                if ($_SESSION['userID']) {
+                                    //toggle comments
+                if ($post['commentsEnabled'] == "on") {
+                    echo("<a href='comments.php?post=$postID'>Comments</a>");
+                }
+                else if ($post['commentsEnabled'] == "") {
+                    echo("<div class='smallCommentText'>");
+                    echo("Comments Disabled");
+                    echo("</div>");
+                }
+                echo("<div class='smallCommentText'>");
+                    echo($post['DateAndTime']);
+                echo("</div>");
+
+                //like/dislike post
+                if (isset($_POST[$postID])) {
+                    $checkIfLikedQuery = mysqli_query($mysqli, "SELECT * FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '$postID'");
+                    $CheckLikedNumRows = mysqli_num_rows($checkIfLikedQuery); //found a method of liking and unliking a post without inserting duplicate keys into the database here: https://stackoverflow.com/questions/2848904/check-if-record-exists By User Dominic Rodger
+
+                    if ($CheckLikedNumRows > 0) {
+                        $removeLike = $mysqli->prepare("DELETE FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '$postID'");
+                        $removeLike->execute();
+                        
+                    }
+                    else {
+                        $addLike = $mysqli->prepare("INSERT INTO userlikedposts (userID, blogPostID) VALUES($SessionUser, $postID)");
+                        $addLike->execute();
+
+                    }
+                    header("refresh:0; url='Profile.php'");
+                }
+                }
+        }
+
+        ?>
         <?php
         include("Includes/footer.php");
         ?>

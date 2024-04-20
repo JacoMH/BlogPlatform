@@ -73,9 +73,7 @@ li {
 }
 
 .banner{
-    background: grey;
-    border-radius: 8px;
-    padding: 100px;
+    margin: auto;
 }
 
 .profilePic{

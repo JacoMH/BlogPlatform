@@ -31,3 +31,9 @@ function comment($postID) {
     window.location.assign("http://localhost/blogplatform/comments.php");
     document.comments.hi.innerHTML = $postID;
 }
+
+function TotalLikes(){
+    $newTotalLikes = document.ProfilePosts.newTotalLikeVal.innerHTML;
+    alert($newTotalLikes); 
+    alert("hello");
+}
