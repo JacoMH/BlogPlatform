@@ -92,7 +92,7 @@
             <button class = "createButton" type="button" name="imageContent">Add Image</button>
             <button class = "createButton" type="button" name="linkContent">Add Link</button>
             <button class = "createButton" type="button" name="videoContent">Add Video</button>
-            <input type="checkbox" name="commentToggle" checked>Enable Comments
+            <input type="checkbox" name="commentToggle" checked>Enable Comments</input>
             </div>
         </form>
         <?php

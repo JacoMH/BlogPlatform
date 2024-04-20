@@ -85,17 +85,23 @@
                 echo($_SESSION['profileLikes']);
                 }
 
-                //toggle comments
-                if ($post['commentsEnabled'] == "on") {
-                    echo("<a href='comments.php?post=$postID'>Comments</a>");
-                }
-                else if ($post['commentsEnabled'] == "") {
-                    echo("<div class='smallCommentText'>");
-                    echo("Comments Disabled");
-                    echo("</div>");
+                //find number of comments
+                $numOfCommentsQuery = mysqli_query($mysqli, "SELECT COUNT(blogPostID) AS NumOfComments FROM commentblogpost WHERE blogPostID = '$postID'");
+
+                While ($numOfComments = mysqli_fetch_assoc($numOfCommentsQuery)) {
+                    $commentNum = $numOfComments['NumOfComments'];
+                    //toggle comments
+                    if ($post['commentsEnabled'] == "on") {
+                        echo("<span><a href='comments.php?post=$postID'>Comments($commentNum)</a></span>");
+                    }
+                    else if ($post['commentsEnabled'] == "") {
+                        echo("<div class='smallCommentText'>");
+                        echo("Comments Disabled");
+                        echo("</div>");
+                    }
                 }
                 echo("<div class='smallCommentText'>");
-                    echo($post['DateAndTime']);
+                echo($post['DateAndTime']);
                 echo("</div>");
 
                 //like/dislike post

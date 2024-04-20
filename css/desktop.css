@@ -50,6 +50,7 @@ li {
 .search {
     margin: auto;
     padding: 10px;
+    text-align: center;
 }
 
 .searchButton {
@@ -147,6 +148,7 @@ li {
     word-break: break-word;
     padding-top: 20px;
     border-top: 1px solid grey;
+    padding: 20px 0px;
 }
 
 .createPostContainer{
@@ -257,4 +259,7 @@ textarea {
     flex-direction: row;
     justify-content: space-between;
     margin: 50px;
+    border: 1px solid grey;
+    border-radius: 8px;
+    padding: 10px;
 }

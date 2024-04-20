@@ -25,10 +25,11 @@
         }
         ?>
         </div>
+        
         <search>
             <form class="search" method="GET">
                 <input  class = "search" name="searchQuery" type="text" placeholder="Search For User..">
-                <button type="submit" name="searchButton">Search</button>
+                <button type="submit" name="searchButton" style="padding: 10px 5px;">Search</button>
             </form>
         </search>
             <?php
@@ -53,41 +54,49 @@
 
         echo("Most Liked posts");
         $mostLikedPostsQuery = mysqli_query($mysqli, "SELECT * FROM blogpost ORDER BY likesOnPost DESC LIMIT 5");
-        
+        echo("<div class='AllPostsContainer'>");
         While ($post = mysqli_fetch_assoc($mostLikedPostsQuery)) {
-                echo("<div class = 'userPhoto'>");
+            echo("<div class = 'post'>");
+            echo("<div class='BloggerProfile' style='padding-right: 10px;'>");
+            echo("<div class = 'userPhoto'>");
 
                 //get the poster profile
                 $getProfilePictureQuery = mysqli_query($mysqli, "SELECT * FROM user WHERE userID = '{$post['userID']}'");
                 
+                $postID = $post['blogPostID'];
                 While ($PosterProfile = mysqli_fetch_assoc($getProfilePictureQuery)) {
                     echo("<a href='user.php?user={$post['userID']}'><img class='userPhoto' src = '{$PosterProfile['profilePicture']}' alt = 'Profile Picture'></a>");
                     echo("</div>");
-                    echo("<div class='username' style='font-size: large;'> {$PosterProfile['username']}</div>");
+                    echo("<span class='username' style='font-size: large; display: flex; justify-content: center;'> {$PosterProfile['username']}</span>");
                     $postUserID = $PosterProfile['userID'];
+                    
+                    //find number of comments
+                    $numOfCommentsQuery = mysqli_query($mysqli, "SELECT COUNT(blogPostID) AS NumOfComments FROM commentblogpost WHERE blogPostID = '$postID'");
+                    
+                    While ($numOfComments = mysqli_fetch_assoc($numOfCommentsQuery)) {
+                        $commentNum = $numOfComments['NumOfComments'];
+                        if ($_SESSION['userID']) {
+                            //toggle comments
+                        if ($post['commentsEnabled'] == "on") {
+                            echo("<span><a href='comments.php?post=$postID'>Comments($commentNum)</a></span>");
+                        }
+                        else if ($post['commentsEnabled'] == "") {
+                            echo("<div class='smallCommentText'>");
+                            echo("Comments Disabled");
+                            echo("</div>");
+                        }
+                        echo("<div class='smallCommentText'>");
+                            echo($post['DateAndTime']);
+                        echo("</div>");
+                    }
                 }
-
-    
-                echo("<div class = 'postContent'>");
+                echo("</div>");
+                
+                echo("<div style='background: green; padding: 10px; border-radius: 8px;'>");
                 echo($post["blogPostText"]);
                 echo($post['blogPostImage']);
                 echo($post['blogPostLink']);
-                echo($post['blogPostVideo']);
-                $postID = $post['blogPostID'];
-                echo("</div>");
-
-                if ($_SESSION['userID']) {
-                                    //toggle comments
-                if ($post['commentsEnabled'] == "on") {
-                    echo("<span><a href='comments.php?post=$postID'>Comments</a></span>");
-                }
-                else if ($post['commentsEnabled'] == "") {
-                    echo("<div class='smallCommentText'>");
-                    echo("Comments Disabled");
-                    echo("</div>");
-                }
-                echo("<div class='smallCommentText'>");
-                    echo($post['DateAndTime']);
+                echo($post['blogPostVideo']);            
                 echo("</div>");
 
                 //create like button
@@ -126,8 +135,9 @@
                     header("refresh:0; url='Home.php'");
                 }
                 }
+            echo("</div>");
         }
-
+        echo("</div>");
         ?>
         <?php
         include("Includes/footer.php");
