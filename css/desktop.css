@@ -251,3 +251,10 @@ textarea {
     flex-direction: row;
     justify-content: flex-end;
 }
+
+.MostLikedBloggers {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 50px;
+}

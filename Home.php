@@ -18,6 +18,7 @@
         session_start();
         if (!empty($_SESSION['username'])) {
             require_once('includes/profileShortcut.php');
+            $SessionUser = $_SESSION['userID'];
         }
         else {
             require_once('includes/loginReg.php');
@@ -36,30 +37,21 @@
                     $searchQuery = $_GET['searchQuery'];
                     header("Refresh:0; url='search.php?s=$searchQuery'");
                 }
-                
-            ?>
-          
             
-        Most Liked Bloggers
-        <?php
-
-            //carousel of maximum 3 top Bloggers in terms of total likes
-            $bloggerQuery = "SELECT * FROM user ORDER BY profileLikes DESC LIMIT 4"; //found out how to gather a finite amount of most liked blogs here: https://stackoverflow.com/questions/4874731/how-can-i-select-the-top-10-largest-numbers-from-a-database-column-using-sql
-            $bloggerResult = mysqli_query($mysqli, $bloggerQuery);              //learnt limits here: https://www.w3schools.com/mysql/mysql_limit.asp
-            $bloggerObject = mysqli_fetch_assoc($bloggerResult);
-
-            while ($bloggerObject = mysqli_fetch_assoc($bloggerResult)) {    //add profile pictures aswell when that works
-                echo("<div class='postContent'>");
-                echo($bloggerObject['username']);
-                echo($bloggerObject['profileLikes']);
-                echo($bloggerObject['userID']);
-                $userID = $bloggerObject['userID'];
-                echo("<a href='user.php?user=$userID'>Profile</a>");
+        echo("Most Liked Bloggers");
+        $bloggerQuery = mysqli_query($mysqli, "SELECT * FROM user ORDER BY profileLikes DESC LIMIT 3");     //learnt limits here: https://www.w3schools.com/mysql/mysql_limit.asp
+        echo("<div class='MostLikedBloggers'>");
+        While ($blogger = mysqli_fetch_assoc($bloggerQuery)) {
+            echo("<div class='BloggerProfile'>");
+            echo("<div class='userPhoto'>");
+                echo("<a href='user.php?user={$blogger['userID']}'><img class='userPhoto' src = '{$blogger['profilePicture']}' alt = 'Profile Picture'></a>");
                 echo("</div>");
-            }
-        ?>
-        Most Liked posts
-        <?php
+                echo("<span class='username' style='font-size: large; display: flex; justify-content: center;'>{$blogger['username']}</span>");
+            echo("</div>");
+        }
+        echo("</div>");
+
+        echo("Most Liked posts");
         $mostLikedPostsQuery = mysqli_query($mysqli, "SELECT * FROM blogpost ORDER BY likesOnPost DESC LIMIT 5");
         
         While ($post = mysqli_fetch_assoc($mostLikedPostsQuery)) {
@@ -69,12 +61,13 @@
                 $getProfilePictureQuery = mysqli_query($mysqli, "SELECT * FROM user WHERE userID = '{$post['userID']}'");
                 
                 While ($PosterProfile = mysqli_fetch_assoc($getProfilePictureQuery)) {
-                    echo("<img src='{$PosterProfile['profilePicture']}' alt= 'Profile Picture'>");
+                    echo("<a href='user.php?user={$post['userID']}'><img class='userPhoto' src = '{$PosterProfile['profilePicture']}' alt = 'Profile Picture'></a>");
                     echo("</div>");
                     echo("<div class='username' style='font-size: large;'> {$PosterProfile['username']}</div>");
+                    $postUserID = $PosterProfile['userID'];
                 }
 
-
+    
                 echo("<div class = 'postContent'>");
                 echo($post["blogPostText"]);
                 echo($post['blogPostImage']);
@@ -86,7 +79,7 @@
                 if ($_SESSION['userID']) {
                                     //toggle comments
                 if ($post['commentsEnabled'] == "on") {
-                    echo("<a href='comments.php?post=$postID'>Comments</a>");
+                    echo("<span><a href='comments.php?post=$postID'>Comments</a></span>");
                 }
                 else if ($post['commentsEnabled'] == "") {
                     echo("<div class='smallCommentText'>");
@@ -97,9 +90,27 @@
                     echo($post['DateAndTime']);
                 echo("</div>");
 
+                //create like button
+                echo("<form class='likeButton' method='POST' action='Home.php'>");
+                echo("<button name = '$postID'>like</button>");
+                echo("</form>");
+
+                //gather total likes and adds it to post to display and store in the database
+                $likesQuery = mysqli_query($mysqli, "SELECT count(blogpostID) As 'likeCount' FROM userlikedposts WHERE blogpostID = '$postID'");
+                $LikeNum = mysqli_fetch_assoc($likesQuery);
+                echo($LikeNum['likeCount']);
+
+                //updates likes in post table
+                $storeLikesQuery = $mysqli->prepare("UPDATE blogpost SET likesOnPost = '{$LikeNum['likeCount']}' WHERE blogpostID = '$postID'");
+                $storeLikesQuery->execute();
+
+                //updates total likes in user table
+                $totalLikesQuery = $mysqli->prepare("UPDATE user SET profileLikes = (SELECT SUM(likesOnPost) As 'totalLikes' FROM blogpost WHERE userID = '$postUserID') WHERE userID = '$postUserID'");
+                $totalLikesQuery->execute();
+
                 //like/dislike post
                 if (isset($_POST[$postID])) {
-                    $checkIfLikedQuery = mysqli_query($mysqli, "SELECT * FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '$postID'");
+                    $checkIfLikedQuery = mysqli_query($mysqli, "SELECT * FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '$postID'"); //check if user has liked post or not
                     $CheckLikedNumRows = mysqli_num_rows($checkIfLikedQuery); //found a method of liking and unliking a post without inserting duplicate keys into the database here: https://stackoverflow.com/questions/2848904/check-if-record-exists By User Dominic Rodger
 
                     if ($CheckLikedNumRows > 0) {
@@ -112,7 +123,7 @@
                         $addLike->execute();
 
                     }
-                    header("refresh:0; url='Profile.php'");
+                    header("refresh:0; url='Home.php'");
                 }
                 }
         }
