@@ -263,3 +263,15 @@ textarea {
     border-radius: 8px;
     padding: 10px;
 }
+
+.userBanner{
+    display: flex;
+    width: 2048px;
+    height: 300px;
+    max-height: 1152px;
+    max-width: 1024px;
+    position: relative;
+    overflow: hidden;
+    background: none;
+    object-fit: contain;
+}

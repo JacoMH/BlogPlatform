@@ -19,9 +19,7 @@
             }
         }
     }
-    $userPostQuery = "SELECT * FROM blogpost WHERE userID = '$userProfile'";
-    $result = mysqli_query($mysqli, $userPostQuery);
-    $row = mysqli_fetch_assoc($result);
+    $userPostQuery = mysqli_query($mysqli, "SELECT * FROM blogpost WHERE userID = '$userProfile'");
 
     //fetch total likes
     $profileLikesQuery = "SELECT profileLikes FROM user WHERE userID = '$userProfile'";
@@ -49,12 +47,19 @@
     }
     //top of profile
     while ($user = mysqli_fetch_assoc($UserQuery)) {
+
+        //banner
         echo("<div class='banner'>");
+        echo("<img class='userBanner' src='{$user['bannerPicture']}'>");
         echo("</div>");
 
-
+        echo("<div class='welcome'>");
         $profileLikes = $profileLikesDisplay['profileLikes'];
         echo($profileLikes); echo(" "); echo("Profile Likes");
+        echo("</div>");
+        //profile picture
+        echo("<div class='userPhoto'>");
+        echo("<img src= '{$user['profilePicture']}'>");
         echo("</div>");
 
         echo("<div class='realName'>");
@@ -63,122 +68,99 @@
         echo("<span class='username'>");
         echo($user['username']);
         echo("</span>");
-    }
 
-    //copy pasted a section of my code from the profile page
-    while ($row = mysqli_fetch_assoc($result)) {
-                $profileID = $row['userID'];
-                echo("<div class='post'>");
-                //fetch their profile
-                $fetchUserProfile = "SELECT profilePicture, username FROM user where userID = '$profileID'";
+    
+    echo("<div class='AllPostsContainer'>");
+    //profile posts
+        while ($row = mysqli_fetch_assoc($userPostQuery)) {
 
-                //profile pic
-                echo("<div class = 'userProfilePic'>");
-                $profileResult = mysqli_query($mysqli, $fetchUserProfile);
-                $profile = mysqli_fetch_assoc($profileResult);
-                echo($profile["profilePicture"]);
-                echo("</div>");
-
-
-                echo("<div class='AllPostsContainer'>");
-                if (empty($result)) {
-                    echo("No Posts Yet");
-                }
-                else {
-                    echo("<form method='POST' action='Profile.php'>");
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        $profileID = $row['userID'];
-                        echo("<div class='post'>");
-                        //fetch their profile
-                        $fetchUserProfile = "SELECT profilePicture, username FROM user where userID = '$profileID'";
-        
-                        //profile pic
-                        echo("<div class = 'userProfilePic'>");
-                        $profileResult = mysqli_query($mysqli, $fetchUserProfile);
-                        $profile = mysqli_fetch_assoc($profileResult);
-                        echo($profile["profilePicture"]);
-                        echo("</div>");
-        
-        
-
-        
-                        //fetch the post
-                        if($row['blogPostText'] != "") { //add these param afterwards && $row['blogPostImage'] != "" && $row['blogPostLink'] != "" && $row['blogPostVideo'] != ""
-                            echo("<div class = 'postContent'>");
-                            echo($row["blogPostText"]);
-                            echo($row['blogPostImage']);
-                            echo($row['blogPostLink']);
-                            echo($row['blogPostVideo']);
+            //post content
+            echo("<div class='post'>");
+            
+                //profile
+                $getUserQuery = mysqli_query($mysqli, "SELECT * FROM user WHERE userID = '$userProfile'");
+                While ($getUser = mysqli_fetch_assoc($getUserQuery)) {
+                    echo("<div class='BloggerProfile' style='padding-right: 10px;'>");
+                            echo("<div class='userPhoto'>");
+                            echo("<img src= '{$getUser['profilePicture']}'>");
                             echo("</div>");
-                            $postID = $row['blogPostID'];
-                            $blogPostText = $row['blogPostText'];
-                            
-                            //create like/dislike post
-                            $PostLikes = $row['likesOnPost'];
-                            echo("<form class='likeButton' method='POST' action='Profile.php'>");
-                            echo("<button name = '$postID'>like</button>");
-        
-                            //gather total likes and adds it to post to display and store in the database
-                            $likesQuery = "SELECT count(blogpostID) As 'likeCount' FROM userlikedposts WHERE blogpostID = '$postID'";
-                            $likes = mysqli_query($mysqli, $likesQuery);
-                            $LikeNum = mysqli_fetch_assoc($likes);
-                            echo($LikeNum['likeCount']);
-                            
-                            //updates likes in post table
-                            $likestore = $LikeNum['likeCount'];
-                            $storeLikesQuery = $mysqli->prepare("UPDATE blogpost SET likesOnPost = '$likestore' WHERE blogpostID = '$postID'");
-                            $storeLikesQuery->execute();
-        
-                            //updates total likes in user table
-                            $totalLikesQuery = $mysqli->prepare("UPDATE user SET profileLikes = (SELECT SUM(likesOnPost) As 'totalLikes' FROM blogpost WHERE userID = '$profileID') WHERE userID = '$profileID'");
-                            $totalLikesQuery->execute();
-        
-                            //toggle comments
-                            if ($row['commentsEnabled'] == "on") {
-                                echo("<a href='comment.php?post=$postID'>Comments</a>");
-                            }
-                            else if ($row['commentsEnabled'] == "") {
-                                echo("<div class='smallCommentText'>");
-                                echo("Comments Disabled");
-                                echo("</div>");
+
+                            echo("<div class='username' style='font-size: large; display: flex; justify-content: center;'>");
+                            echo("<span style='font-size: large; display: flex; justify-content: center;'> {$getUser['username']}</span>");
+                            echo("</div>");
+
+
+                                    //gather number of comments
+                            $numOfCommentsQuery = mysqli_query($mysqli, "SELECT COUNT(blogPostID) AS NumOfComments FROM commentblogpost WHERE blogPostID = '{$row['blogPostID']}'");
+
+                            While ($numOfComments = mysqli_fetch_assoc($numOfCommentsQuery)) {
+                                
+                                $commentNum = $numOfComments['NumOfComments'];
+                                
+                                
+                                //toggle comments
+                                if ($row['commentsEnabled'] == "on") {
+                                    $commentLink = $row['blogPostID'];
+                                    echo("<span><a href='comment.php?post=$commentLink'>Comments($commentNum)</a></span>");
+                                }
+                                else if ($row['commentsEnabled'] == "") {
+                                    echo("<div class='smallCommentText'>");
+                                    echo("Comments Disabled");
+                                    echo("</div>");
+                                }
                             }
                             echo("<div class='smallCommentText'>");
-                                echo($row['DateAndTime']);
+                            echo($row['DateAndTime']);
                             echo("</div>");
-        
-                            //like/dislike post
-                            if (isset($_POST[$postID])) {
-                                $checkIfLikedQuery = mysqli_query($mysqli, "SELECT * FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '$postID'");
-                                $CheckLikedNumRows = mysqli_num_rows($checkIfLikedQuery); //found a method of liking and unliking a post without inserting duplicate keys into the database here: https://stackoverflow.com/questions/2848904/check-if-record-exists By User Dominic Rodger
+                    echo("</div>");
     
-                                if ($CheckLikedNumRows > 0) {
-                                    $removeLike = $mysqli->prepare("DELETE FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '$postID'");
-                                    $removeLike->execute();
-                                    
-                                }
-                                else {
-                                    $addLike = $mysqli->prepare("INSERT INTO userlikedposts (userID, blogPostID) VALUES($SessionUser, $postID)");
-                                    $addLike->execute();
-    
-                                }
-                                header("refresh:0; url='Profile.php'");
-                            }
-                        }
-                        else {
-                            echo("<h2>No Posts Made</h2>");
-                            echo("please work");
-                        }
-                        echo("</div>");
-                        $postID = $row['blogPostID'];
-                        $blogPostText = $row['blogPostText'];
-                        
-                    echo("</form>");
-                    }
                 }
-            }
-            ?>
+                //postContent
+                echo("<span style='background: green; padding: 10px; border-radius: 8px;'>{$row['blogPostText']}</span>");
+
+                
+            //all stuff likes below
+
+                //gather total likes and adds it to post to display and store in the database
+                $likesQuery = mysqli_query($mysqli, "SELECT count(blogpostID) As 'likeCount' FROM userlikedposts WHERE blogpostID = '{$row['blogPostID']}'");
+                $LikeNum = mysqli_fetch_assoc($likesQuery);
+
+                //updates likes in post table
+                $storeLikesQuery = $mysqli->prepare("UPDATE blogpost SET likesOnPost = '{$LikeNum['likeCount']}' WHERE blogpostID = '{$row['blogPostID']}'");
+                $storeLikesQuery->execute();
+
+                //create like/dislike post
+                $PostLikes = $row['likesOnPost'];
+                echo("<form class='likeButton' method='POST'>");
+                echo("<button name = '{$row['blogPostID']}'>like</button>");
+                echo("<label for='{$row['blogPostID']}'>{$LikeNum['likeCount']}</label>");
+                echo("</form>");
+
+
+                //like/dislike post
+                if (isset($_POST[$row['blogPostID']])) {
+                    $checkIfLikedQuery = mysqli_query($mysqli, "SELECT * FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '{$row['blogPostID']}'");
+                    $CheckLikedNumRows = mysqli_num_rows($checkIfLikedQuery); //found a method of liking and unliking a post without inserting duplicate keys into the database here: https://stackoverflow.com/questions/2848904/check-if-record-exists By User Dominic Rodger
+
+                    if ($CheckLikedNumRows > 0) {
+                        $removeLike = $mysqli->prepare("DELETE FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '{$row['blogPostID']}'");
+                        $removeLike->execute();
+                        
+                    }
+                    else {
+                        $addLike = $mysqli->prepare("INSERT INTO userlikedposts (userID, blogPostID) VALUES($SessionUser, '{$row['blogPostID']}')");
+                        $addLike->execute();
+
+                    }
+                    header("refresh:0; url='user.php?user=$userProfile'");
+                }
+            echo("</div>");
+
+        }
+    echo("</div>");
+    }
+    ?>
         </div>
     </main>
-
 </body>
 </html>

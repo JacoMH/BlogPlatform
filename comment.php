@@ -66,7 +66,7 @@
                 echo($postToCommentOn['blogPostLink']);
                 echo($postToCommentOn['blogPostVideo']);
                 echo("</div>");
-                echo("</div>");
+            echo("</div>");
         }
     ?>
     <form class="createPostContainer" method="POST">

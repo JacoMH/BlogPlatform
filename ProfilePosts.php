@@ -68,7 +68,7 @@
                 //gather total likes and adds it to post to display and store in the database
                 $likesQuery = mysqli_query($mysqli, "SELECT count(blogpostID) As 'likeCount' FROM userlikedposts WHERE blogpostID = '$postID'");
                 $LikeNum = mysqli_fetch_assoc($likesQuery);
-                echo($LikeNum['likeCount']);
+               // echo($LikeNum['likeCount']);
 
                 //updates likes in post table
                 $storeLikesQuery = $mysqli->prepare("UPDATE blogpost SET likesOnPost = '{$LikeNum['likeCount']}' WHERE blogpostID = '$postID'");
