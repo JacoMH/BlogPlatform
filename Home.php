@@ -65,6 +65,7 @@
                 
                 $postID = $post['blogPostID'];
                 While ($PosterProfile = mysqli_fetch_assoc($getProfilePictureQuery)) {
+
                     echo("<a href='user.php?user={$post['userID']}'><img class='userPhoto' src = '{$PosterProfile['profilePicture']}' alt = 'Profile Picture'></a>");
                     echo("</div>");
                     echo("<span class='username' style='font-size: large; display: flex; justify-content: center;'> {$PosterProfile['username']}</span>");
@@ -93,47 +94,13 @@
                 echo("</div>");
                 
                 echo("<div style='background: green; padding: 10px; border-radius: 8px;'>");
-                echo($post["blogPostText"]);
+                echo("<textarea readonly>{$post['blogPostText']}</textarea>");
                 echo($post['blogPostImage']);
                 echo($post['blogPostLink']);
                 echo($post['blogPostVideo']);            
                 echo("</div>");
 
-                //create like button
-                echo("<form class='likeButton' method='POST' action='Home.php'>");
-                echo("<button name = '$postID'>like</button>");
-                echo("</form>");
-
-                //gather total likes and adds it to post to display and store in the database
-                $likesQuery = mysqli_query($mysqli, "SELECT count(blogpostID) As 'likeCount' FROM userlikedposts WHERE blogpostID = '$postID'");
-                $LikeNum = mysqli_fetch_assoc($likesQuery);
-                echo($LikeNum['likeCount']);
-
-                //updates likes in post table
-                $storeLikesQuery = $mysqli->prepare("UPDATE blogpost SET likesOnPost = '{$LikeNum['likeCount']}' WHERE blogpostID = '$postID'");
-                $storeLikesQuery->execute();
-
-                //updates total likes in user table
-                $totalLikesQuery = $mysqli->prepare("UPDATE user SET profileLikes = (SELECT SUM(likesOnPost) As 'totalLikes' FROM blogpost WHERE userID = '$postUserID') WHERE userID = '$postUserID'");
-                $totalLikesQuery->execute();
-
-                //like/dislike post
-                if (isset($_POST[$postID])) {
-                    $checkIfLikedQuery = mysqli_query($mysqli, "SELECT * FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '$postID'"); //check if user has liked post or not
-                    $CheckLikedNumRows = mysqli_num_rows($checkIfLikedQuery); //found a method of liking and unliking a post without inserting duplicate keys into the database here: https://stackoverflow.com/questions/2848904/check-if-record-exists By User Dominic Rodger
-
-                    if ($CheckLikedNumRows > 0) {
-                        $removeLike = $mysqli->prepare("DELETE FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '$postID'");
-                        $removeLike->execute();
-                        
-                    }
-                    else {
-                        $addLike = $mysqli->prepare("INSERT INTO userlikedposts (userID, blogPostID) VALUES($SessionUser, $postID)");
-                        $addLike->execute();
-
-                    }
-                    header("refresh:0; url='Home.php'");
-                }
+    
                 }
             echo("</div>");
         }

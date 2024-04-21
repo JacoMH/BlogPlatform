@@ -151,15 +151,16 @@ li {
     padding: 20px 0px;
 }
 
-.createPostContainer{
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-    padding: 10px;
-    border: 1px solid grey;
-    border-radius: 8px;
-    margin-bottom: 5px;
+.post{  
+    display:flex;
+    flex-direction: row;
+    margin-top: 5px;
+    align-items: center;
+    word-break: break-word;
+    padding-top: 20px;
 }
+
+
 
 textarea {
     resize: none;

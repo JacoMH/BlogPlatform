@@ -131,7 +131,7 @@
                         }
                     }
                 }
-
+                include("Includes/footer.php");
     ?>
     </main>
 </body>

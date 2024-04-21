@@ -19,13 +19,35 @@
             }
         }
     }
-    $userPostQuery = mysqli_query($mysqli, "SELECT * FROM blogpost WHERE userID = '$userProfile'");
 
     //fetch total likes
     $profileLikesQuery = "SELECT profileLikes FROM user WHERE userID = '$userProfile'";
     $profileLikesLink = mysqli_query($mysqli, $profileLikesQuery);
     $profileLikesDisplay = mysqli_fetch_assoc($profileLikesLink);
     echo($profileLikesDisplay['profileLikes']);
+
+    //filter
+    $currentFilter = "";
+
+    if (isset($_POST['Filters'])) {
+        if ($_POST['Filters'] == "Most Recent") {
+            $userPostQuery = mysqli_query($mysqli, "SELECT * FROM blogpost WHERE userID = '$userProfile' ORDER BY DateAndTime DESC"); 
+            $currentFilter = "Most Recent";
+        }
+        else if($_POST['Filters'] == "Most Commented") {
+            //put on number of comments next to comment link, include comment number with post
+            $userPostQuery = mysqli_query($mysqli, "SELECT * FROM blogpost WHERE userID = '$userProfile' ORDER BY ");
+            $currentFilter = "Most Commented";
+        }
+        else if($_POST['Filters'] == "Oldest") {
+            $userPostQuery = mysqli_query($mysqli, "SELECT * FROM blogpost WHERE userID = '$userProfile' ORDER BY DateAndTime ASC");
+            $currentFilter = "Oldest";
+        }
+    }
+    else{
+        $userPostQuery = mysqli_query($mysqli, "SELECT * FROM blogpost WHERE userID = '$userProfile' ORDER BY DateAndTime DESC"); 
+        $currentFilter = "Most Recent";
+    }
 ?>
 
 <!DOCTYPE html>
@@ -59,7 +81,7 @@
         echo("</div>");
         //profile picture
         echo("<div class='userPhoto'>");
-        echo("<img src= '{$user['profilePicture']}'>");
+        echo("<img class='userPhoto' src= '{$user['profilePicture']}'>");
         echo("</div>");
 
         echo("<div class='realName'>");
@@ -71,6 +93,21 @@
 
     
     echo("<div class='AllPostsContainer'>");
+    
+    ?>
+    <form style= "text-align: center;" method="POST" action="user.php?user=<?php echo($userProfile)?>">
+    <label>Sort By:</label>
+    <select name="Filters">
+        <option selected="" disabled="" style='display: none;'><?php echo($currentFilter); ?></option>
+        <option value="Most Recent">Most Recent</option>
+        <option value="Most Commented">Most Commented</option>
+        <option value="Oldest">Oldest</option>
+    </select>
+    <button type="submit" name="filterConfirm">Go</button>
+    </form>
+    
+    <?php
+
     //profile posts
         while ($row = mysqli_fetch_assoc($userPostQuery)) {
 
@@ -82,7 +119,7 @@
                 While ($getUser = mysqli_fetch_assoc($getUserQuery)) {
                     echo("<div class='BloggerProfile' style='padding-right: 10px;'>");
                             echo("<div class='userPhoto'>");
-                            echo("<img src= '{$getUser['profilePicture']}'>");
+                            echo("<img class='userPhoto' src= '{$getUser['profilePicture']}'>");
                             echo("</div>");
 
                             echo("<div class='username' style='font-size: large; display: flex; justify-content: center;'>");
@@ -116,7 +153,7 @@
     
                 }
                 //postContent
-                echo("<span style='background: green; padding: 10px; border-radius: 8px;'>{$row['blogPostText']}</span>");
+                echo("<textarea readonly style='background: green; padding: 10px; border-radius: 8px;'>{$row['blogPostText']}</textarea>");
 
                 
             //all stuff likes below
@@ -157,8 +194,10 @@
             echo("</div>");
 
         }
+        
     echo("</div>");
     }
+    include("Includes/footer.php");
     ?>
         </div>
     </main>

@@ -52,7 +52,7 @@
             echo("</div>");
             if($post['blogPostText'] != "") { //add these param afterwards && $row['blogPostImage'] != "" && $row['blogPostLink'] != "" && $row['blogPostVideo'] != ""
                 echo("<div class = 'postContent'>");
-                echo($post["blogPostText"]);
+                echo("<textarea readonly>{$post['blogPostText']}</textarea>");
                 echo($post['blogPostImage']);
                 echo($post['blogPostLink']);
                 echo($post['blogPostVideo']);
