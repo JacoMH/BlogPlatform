@@ -92,7 +92,7 @@
                     $commentNum = $numOfComments['NumOfComments'];
                     //toggle comments
                     if ($post['commentsEnabled'] == "on") {
-                        echo("<span><a href='comments.php?post=$postID'>Comments($commentNum)</a></span>");
+                        echo("<span><a href='comment.php?post=$postID'>Comments($commentNum)</a></span>");
                     }
                     else if ($post['commentsEnabled'] == "") {
                         echo("<div class='smallCommentText'>");

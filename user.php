@@ -135,7 +135,7 @@
         
                             //toggle comments
                             if ($row['commentsEnabled'] == "on") {
-                                echo("<a href='comments.php?post=$postID'>Comments</a>");
+                                echo("<a href='comment.php?post=$postID'>Comments</a>");
                             }
                             else if ($row['commentsEnabled'] == "") {
                                 echo("<div class='smallCommentText'>");
