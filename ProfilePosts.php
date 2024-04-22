@@ -34,7 +34,7 @@
 <body>
     <div class="AllPostsContainer">
     
-    <form method="POST" action="Profile.php">
+    <form method="POST" action="Profile.php" style='padding-bottom: 10px; display: flex; justify-content: center;'>
     <label>Sort By:</label>
     <select name="Filters">
         <option selected="" disabled="" style='display: none;'><?php echo($currentFilter); ?></option>
@@ -47,37 +47,45 @@
     <?php
 
         While ($post = mysqli_fetch_assoc($postQuery)) {
+        echo("<main style='display: flex; flex-direction: row;'>");    
+            echo("<div style= 'padding-right: 10px;'>");
             echo("<div class = 'userPhoto'>");
             echo("<img src='{$_SESSION['profilePicture']}' alt= 'Profile Picture'>");
             echo("</div>");
+            echo("<span class='username' style='font-size: large; display: flex; justify-content: center;'> {$_SESSION['username']}</span>");
+            echo("</div>");
+            
             if($post['blogPostText'] != "") { //add these param afterwards && $row['blogPostImage'] != "" && $row['blogPostLink'] != "" && $row['blogPostVideo'] != ""
                 echo("<div class = 'postContent'>");
                 $textContent = $post['blogPostText'];
-                echo("<textarea readonly>{$textContent}</textarea>");
+                echo("<textarea readonly style='background: green; border: none;'>{$textContent}</textarea>");
                 echo($post['blogPostImage']);
                 echo($post['blogPostLink']);
                 echo($post['blogPostVideo']);
                 echo("</div>");
                 $postID = $post['blogPostID'];
                 $blogPostText = $post['blogPostText'];
-                
+        echo("</main>");        
+                //
+        echo("<span style='display: flex; flex-direction: row; padding: 3px; justify-content: center;'>");
                 //create like/dislike post
                 $PostLikes = $post['likesOnPost'];
-                echo("<form class='likeButton' method='POST' action='Profile.php'>");
+                echo("<form class='likeButton' style='padding: 3px;' method='POST' action='Profile.php'>");
                 echo("<button type = 'submit' name = '$postID'>like</button>");
+               // echo("<label>{$LikeNum['likeCount']}</label>");
                 echo("</form>");
                 
 
                 //edit button
-                echo("<form class='editButton' method='POST' action='Profile.php'>");
+                echo("<form class='editButton' style='padding: 3px;' method='POST' action='Profile.php'>");
                 echo("<button type = 'submit' name = 'edit$postID'>edit</button>");
                 echo("</form>");
 
                 //delete button
-                echo("<form class='deleteButton' method='POST' action='Profile.php'>");
+                echo("<form class='deleteButton'  style='padding: 3px;' method='POST' action='Profile.php'>");
                 echo("<button type = 'submit' name = 'delete$postID'>delete</button>");
                 echo("</form>");
-
+        echo("</span>");
                 //delete post
                 if (isset($_POST["delete$postID"])) {
                     $deletePost = mysqli_query($mysqli, "DELETE FROM blogpost WHERE blogPostID = '$postID'");
@@ -107,7 +115,6 @@
                 //gather total likes and adds it to post to display and store in the database
                 $likesQuery = mysqli_query($mysqli, "SELECT count(blogpostID) As 'likeCount' FROM userlikedposts WHERE blogpostID = '$postID'");
                 $LikeNum = mysqli_fetch_assoc($likesQuery);
-               // echo($LikeNum['likeCount']);
 
                 //updates likes in post table
                 $storeLikesQuery = $mysqli->prepare("UPDATE blogpost SET likesOnPost = '{$LikeNum['likeCount']}' WHERE blogpostID = '$postID'");
@@ -121,7 +128,6 @@
                 $displayTotalLikes = mysqli_query($mysqli, "SELECT profileLikes FROM user WHERE userID = '$SessionUser'");
                 While ($displayLikes = mysqli_fetch_assoc($displayTotalLikes)) {
                 $_SESSION['profileLikes'] = $displayLikes['profileLikes']; 
-                echo($_SESSION['profileLikes']);
                 }
 
                 //find number of comments

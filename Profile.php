@@ -28,8 +28,8 @@
                 include("topOfProfile.php");
             ?>
             <!-- make post -->
-            <form class="createPostContainer" action="Profile.php" method="POST">
-                        <div style="display: flex; flex-direction: row;">
+            <form class="createPostContainer" style= "margin: auto; padding: 10px;" action="Profile.php" method="POST">
+                        <div class= "AllPostsContainer" style="display: flex; flex-direction: row;">
                             <textarea id="w3review" name="textContent" rows="4" cols="50"></textarea>
                             <button class = "createButton" type="submit" name="makePostButton">Create Post</button>
                         </div>
@@ -37,7 +37,7 @@
                         <button class = "createButton" type="button" name="imageContent">Add Image</button>
                         <button class = "createButton" type="button" name="linkContent">Add Link</button>
                         <button class = "createButton" type="button" name="videoContent">Add Video</button>
-                        <input type="checkbox" name="commentToggle" checked>Enable Comments
+                        <input type="checkbox" name="commentToggle" checked>Enable Comments</input>
                         </div>
                     </form>
                     <?php
@@ -49,6 +49,7 @@
                             header("location = Profile.php");
                         }
         ?>
+        </div>
             
             
             <?php

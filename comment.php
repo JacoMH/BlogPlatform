@@ -70,18 +70,18 @@
                 echo($postToCommentOn['blogPostLink']);
                 echo($postToCommentOn['blogPostVideo']);
                 echo("</div>");
-                echo("</div>");
             echo("</div>");
         }
     ?>
     <form class="createPostContainer" method="POST">
-            <div style="display: flex; flex-direction: row;">
+            <div style="display: flex; flex-direction: row; justify-content: center; padding: 10px;">
                 <textarea id="w3review" name="textContent" rows="4" cols="50"></textarea> <!-- textarea found on w3schools -->
                 <button class = "createButton" type="submit" name="makeCommentButton">Create Comment</button>
             </div>
         </form>
         
     <?php
+        echo("<div class='AllPostsContainer'>");
                 //make comment
                 if (isset($_POST['makeCommentButton']) && $_POST['textContent'] != "") {
                     $CommentContent = $_POST['textContent'];
@@ -102,8 +102,9 @@
                     echo("<a href='user.php?user={$fetchCommenterProfile['userID']}'><img class='userPhoto' src = '{$fetchCommenterProfile['profilePicture']}' alt = 'Profile Picture'></a>");
                      echo($fetchCommenterProfile['username']);
                    }
+                   echo("<div>");
                    echo($fetchComments['commentText']);
-
+                   echo("</div>");
                     echo($fetchComments['LikesOnComment']);
 
                     
@@ -135,6 +136,8 @@
                             header("refresh:0; url='comment.php?post=$currentPost'");
                         }
                     }
+                echo("</div>");
+                echo("</div>");
                 }
                 include("Includes/footer.php");
     ?>
