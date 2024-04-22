@@ -14,7 +14,7 @@
             }
             else if($_POST['Filters'] == "Most Commented") {
                 //put on number of comments next to comment link, include comment number with post
-                $postQuery = mysqli_query($mysqli, "SELECT * FROM blogpost WHERE userID = '$SessionUser' ORDER BY ");
+                $postQuery = mysqli_query($mysqli, "SELECT * FROM blogpost WHERE userID = '$SessionUser' ORDER BY NumOfComments DESC");
                 $currentFilter = "Most Commented";
             }
             else if($_POST['Filters'] == "Oldest") {
@@ -52,7 +52,8 @@
             echo("</div>");
             if($post['blogPostText'] != "") { //add these param afterwards && $row['blogPostImage'] != "" && $row['blogPostLink'] != "" && $row['blogPostVideo'] != ""
                 echo("<div class = 'postContent'>");
-                echo("<textarea readonly>{$post['blogPostText']}</textarea>");
+                $textContent = $post['blogPostText'];
+                echo("<textarea readonly>{$textContent}</textarea>");
                 echo($post['blogPostImage']);
                 echo($post['blogPostLink']);
                 echo($post['blogPostVideo']);
@@ -63,8 +64,46 @@
                 //create like/dislike post
                 $PostLikes = $post['likesOnPost'];
                 echo("<form class='likeButton' method='POST' action='Profile.php'>");
-                echo("<button name = '$postID'>like</button>");
+                echo("<button type = 'submit' name = '$postID'>like</button>");
                 echo("</form>");
+                
+
+                //edit button
+                echo("<form class='editButton' method='POST' action='Profile.php'>");
+                echo("<button type = 'submit' name = 'edit$postID'>edit</button>");
+                echo("</form>");
+
+                //delete button
+                echo("<form class='deleteButton' method='POST' action='Profile.php'>");
+                echo("<button type = 'submit' name = 'delete$postID'>delete</button>");
+                echo("</form>");
+
+                //delete post
+                if (isset($_POST["delete$postID"])) {
+                    $deletePost = mysqli_query($mysqli, "DELETE FROM blogpost WHERE blogPostID = '$postID'");
+                    header("refresh:0;");
+                }
+
+                //edit post
+                if (isset($_POST["edit$postID"])) {
+                    echo("Hllo");
+                    echo("<form method='POST'>");
+                    echo("<textarea name='newText'>{$post['blogPostText']}</textarea>");
+                    echo("<button type='submit' name='SubmitEdit$postID'>Submit Changes</button>");
+                    echo("</form>");
+                }
+
+                if (isset($_POST["SubmitEdit$postID"])) {
+                    echo("still working");
+                    if($_POST['newText'] != "") { //improve upon this as you can just put in blank spaces
+                        $updateBlogPostQuery = mysqli_query($mysqli, "UPDATE blogpost SET blogPostText = '{$_POST['newText']}' WHERE blogPostID = '$postID'");
+                        header("refresh:0;");
+                    }
+                }
+
+                echo("<div id='overlay'>");
+                echo("</div>");
+
                 //gather total likes and adds it to post to display and store in the database
                 $likesQuery = mysqli_query($mysqli, "SELECT count(blogpostID) As 'likeCount' FROM userlikedposts WHERE blogpostID = '$postID'");
                 $LikeNum = mysqli_fetch_assoc($likesQuery);
@@ -89,7 +128,14 @@
                 $numOfCommentsQuery = mysqli_query($mysqli, "SELECT COUNT(blogPostID) AS NumOfComments FROM commentblogpost WHERE blogPostID = '$postID'");
 
                 While ($numOfComments = mysqli_fetch_assoc($numOfCommentsQuery)) {
-                    $commentNum = $numOfComments['NumOfComments'];
+                    
+                    
+                    $commentNum = $numOfComments['NumOfComments'];#
+                    
+                    
+                    $numCommentsStore = mysqli_query($mysqli, "UPDATE blogpost SET NumOfComments = '$commentNum' WHERE blogPostID = '$postID'"); //UPDATE total number of comments in blogpost record
+                    
+                    
                     //toggle comments
                     if ($post['commentsEnabled'] == "on") {
                         echo("<span><a href='comment.php?post=$postID'>Comments($commentNum)</a></span>");

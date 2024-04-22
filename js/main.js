@@ -26,14 +26,12 @@ function checkLogFunction() {
         alert("not filled")
     }
 }
-function comment($postID) {
-    alert($postID);
-    window.location.assign("http://localhost/blogplatform/comments.php");
-    document.comments.hi.innerHTML = $postID;
-}
 
-function TotalLikes(){
-    $newTotalLikes = document.ProfilePosts.newTotalLikeVal.innerHTML;
-    alert($newTotalLikes); 
-    alert("hello");
-}
+
+function on() {
+    document.getElementById("overlay").style.display = "block";
+  }
+  
+  function off() {
+    document.getElementById("overlay").style.display = "none";
+  }

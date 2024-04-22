@@ -276,3 +276,25 @@ textarea {
     background: none;
     object-fit: contain;
 }
+
+#popup2:after {
+    position: fixed;
+    content: "";
+    top: 0;
+    left: 0;  /* https://codepen.io/chabzz/pen/mVYVpY */
+    bottom: 0;
+    right: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: -2;
+  }
+  
+  #popup2:before {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: #FFF;
+    z-index: -1;
+  }

@@ -50,21 +50,26 @@
 
         While($postToCommentOn = mysqli_fetch_assoc($fetchPostQuery)) {
             $userWhoMadePostID = $postToCommentOn['userID'];
+            
+            
             //fetch user receiving the comments
             $commentedUserQuery = mysqli_query($mysqli, "SELECT * FROM user WHERE userID = '$userWhoMadePostID' ");
-            echo("<div class='post'>");
+            echo("<div>");
             While ($commentedUser = mysqli_fetch_assoc($commentedUserQuery)) {
+                echo("<div style='display: flex; flex-direction: column;'>");
                 echo("<div class = 'userPhoto'>");
-                echo("<img src='{$commentedUser['profilePicture']}' alt= 'Profile Picture'>");
+                echo("<img class='userPhoto' src='{$commentedUser['profilePicture']}' alt= 'Profile Picture'>");
+                echo("</div>");
                 echo("</div>");
                 echo("<span class='username' style='font-size: large; display: flex; justify-content: center;'> {$commentedUser['username']}</span>");
             }
 
-            echo("<div class = 'postContent'>");
-                echo($postToCommentOn["blogPostText"]);
+            echo("<div class = 'postContent' style='display: flex; justify-content: center; background: green;'>");
+                echo("<textarea style= 'background: green; border: none;'readonly>{$postToCommentOn['blogPostText']}</textarea>");
                 echo($postToCommentOn['blogPostImage']);
                 echo($postToCommentOn['blogPostLink']);
                 echo($postToCommentOn['blogPostVideo']);
+                echo("</div>");
                 echo("</div>");
             echo("</div>");
         }
@@ -75,7 +80,7 @@
                 <button class = "createButton" type="submit" name="makeCommentButton">Create Comment</button>
             </div>
         </form>
-
+        
     <?php
                 //make comment
                 if (isset($_POST['makeCommentButton']) && $_POST['textContent'] != "") {

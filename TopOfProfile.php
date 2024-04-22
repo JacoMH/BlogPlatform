@@ -7,6 +7,7 @@
         $updatedPic = $_POST['profilePictureLink'];
         $updateProfilePic = mysqli_query($mysqli, "UPDATE user SET profilePicture = '$updatedPic' WHERE userID = '$SessionUser'");
         $_SESSION['profilePicture'] = $_POST['profilePictureLink'];  
+        header("refresh:0;");
     } 
 
     //if submit banner picture image

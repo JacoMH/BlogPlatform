@@ -52,9 +52,49 @@
         }
         echo("</div>");
 
-        echo("Most Liked posts");
-        $mostLikedPostsQuery = mysqli_query($mysqli, "SELECT * FROM blogpost ORDER BY likesOnPost DESC LIMIT 5");
+        
+        //filter
+        $currentFilter = "";
+        if (isset($_POST['Filters'])) {
+            if ($_POST['Filters'] == "Most Recent") {
+                $mostLikedPostsQuery = mysqli_query($mysqli, "SELECT * FROM blogpost ORDER BY DateAndTime DESC LIMIT 10"); 
+                $currentFilter = "Most Recent";
+                echo($currentFilter);
+            }
+            else if($_POST['Filters'] == "Most Liked Posts") {
+                //put on number of comments next to comment link, include comment number with post
+                $mostLikedPostsQuery = mysqli_query($mysqli, "SELECT * FROM blogpost ORDER BY likesOnPost DESC LIMIT 10");
+                $currentFilter = "Most Liked Posts";
+                echo($currentFilter);
+            }
+            else if($_POST['Filters'] == "Most Commented") {
+                $mostLikedPostsQuery = mysqli_query($mysqli, "SELECT * FROM blogpost ORDER BY NumOfComments DESC LIMIT 10");
+                $currentFilter = "Most Commented";
+                echo($currentFilter);
+            }
+        }
+        else{
+            $mostLikedPostsQuery = mysqli_query($mysqli, "SELECT * FROM blogpost ORDER BY likesOnPost DESC LIMIT 10"); 
+            $currentFilter = "Most Liked Posts";
+            echo($currentFilter);
+        }
+
         echo("<div class='AllPostsContainer'>");
+        ?>
+            <!-- filter -->
+           <form method="POST" action="Home.php" style="display: flex; justify-content: center;" >
+            <label>Sort By:</label>
+            <select name="Filters">
+                <option selected="" disabled="" style='display: none;'><?php echo($currentFilter); ?></option>
+                <option value="Most Liked Posts">Most Liked Posts</option>
+                <option value="Most Recent">Most Recent</option>
+                <option value="Most Commented">Most Commented</option>
+            </select>
+            <button type="submit" name="filterConfirm">Go</button>
+            </form>
+        <?php
+
+
         While ($post = mysqli_fetch_assoc($mostLikedPostsQuery)) {
             echo("<div class = 'post'>");
             echo("<div class='BloggerProfile' style='padding-right: 10px;'>");
@@ -70,6 +110,46 @@
                     echo("</div>");
                     echo("<span class='username' style='font-size: large; display: flex; justify-content: center;'> {$PosterProfile['username']}</span>");
                     $postUserID = $PosterProfile['userID'];
+                    
+                //if sessionUser made the post they get these permissions on it
+                if ($post['userID'] == $SessionUser) {
+                    
+                            //edit button
+                            echo("<form class='editButton' method='POST' action='Home.php'>");
+                            echo("<button type = 'submit' name = 'edit$postID'>edit</button>");
+                            echo("</form>");
+
+                            //delete button
+                            echo("<form class='deleteButton' method='POST' action='Home.php'>");
+                            echo("<button type = 'submit' name = 'delete$postID'>delete</button>");
+                            echo("</form>");
+
+                            //delete post
+                            if (isset($_POST["delete$postID"])) {
+                                $deletePost = mysqli_query($mysqli, "DELETE FROM blogpost WHERE blogPostID = '$postID'");
+                                header("refresh:0;");
+                            }
+
+                            //edit post
+                            if (isset($_POST["edit$postID"])) {
+                                echo("Hllo");
+                                echo("<form method='POST'>");
+                                echo("<textarea name='newText'>{$post['blogPostText']}</textarea>");
+                                echo("<button type='submit' name='SubmitEdit$postID'>Submit Changes</button>");
+                                echo("</form>");
+                            }
+
+                            if (isset($_POST["SubmitEdit$postID"])) {
+                                echo("still working");
+                                if($_POST['newText'] != "") { //improve upon this as you can just put in blank spaces
+                                    $updateBlogPostQuery = mysqli_query($mysqli, "UPDATE blogpost SET blogPostText = '{$_POST['newText']}' WHERE blogPostID = '$postID'");
+                                    header("refresh:0;");
+                                }
+                }
+
+                }
+                    
+                    
                     
                     //find number of comments
                     $numOfCommentsQuery = mysqli_query($mysqli, "SELECT COUNT(blogPostID) AS NumOfComments FROM commentblogpost WHERE blogPostID = '$postID'");
@@ -94,7 +174,7 @@
                 echo("</div>");
                 
                 echo("<div style='background: green; padding: 10px; border-radius: 8px;'>");
-                echo("<textarea readonly>{$post['blogPostText']}</textarea>");
+                echo("<textarea readonly style = 'background: green; border: none;'>{$post['blogPostText']}</textarea>");
                 echo($post['blogPostImage']);
                 echo($post['blogPostLink']);
                 echo($post['blogPostVideo']);            

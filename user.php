@@ -36,7 +36,7 @@
         }
         else if($_POST['Filters'] == "Most Commented") {
             //put on number of comments next to comment link, include comment number with post
-            $userPostQuery = mysqli_query($mysqli, "SELECT * FROM blogpost WHERE userID = '$userProfile' ORDER BY ");
+            $userPostQuery = mysqli_query($mysqli, "SELECT * FROM blogpost WHERE userID = '$userProfile' ORDER BY NumOfComments DESC");
             $currentFilter = "Most Commented";
         }
         else if($_POST['Filters'] == "Oldest") {
@@ -130,10 +130,12 @@
                                     //gather number of comments
                             $numOfCommentsQuery = mysqli_query($mysqli, "SELECT COUNT(blogPostID) AS NumOfComments FROM commentblogpost WHERE blogPostID = '{$row['blogPostID']}'");
 
+                            
                             While ($numOfComments = mysqli_fetch_assoc($numOfCommentsQuery)) {
                                 
                                 $commentNum = $numOfComments['NumOfComments'];
                                 
+                                $numCommentsStore = mysqli_query($mysqli, "UPDATE blogpost SET NumOfComments = '$commentNum' WHERE blogPostID = '{$row['blogPostID']}'"); //UPDATE total number of comments in blogpost record
                                 
                                 //toggle comments
                                 if ($row['commentsEnabled'] == "on") {

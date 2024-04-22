@@ -50,6 +50,7 @@ li {
 .search {
     margin: auto;
     padding: 10px;
+    text-align: center;
 }
 
 .searchButton {
@@ -147,29 +148,153 @@ li {
     word-break: break-word;
     padding-top: 20px;
     border-top: 1px solid grey;
+    padding: 20px 0px;
+}
+
+.post{  
+    display:flex;
+    flex-direction: row;
+    margin-top: 5px;
+    align-items: center;
+    word-break: break-word;
+    padding-top: 20px;
 }
 
 
-
-.createPostContainer{
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-    padding: 10px;
-    border: 1px solid grey;
-    border-radius: 8px;
-    margin-bottom: 5px;
-}
 
 textarea {
     resize: none;
   }
 
-  .smallCommentText{
+.smallCommentText{
     font-size: smaller;
-  }
+}
 
-  .newOrAlrUser {
+.CommentUsername{
+    color: grey;
+    display: flex;
+    justify-content: left;
+}
+
+
+.likeButton{
+    margin-left: 10px;
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+}
+
+.imgChange{
+    display: flex;
+    flex-direction: row;
+    margin: auto;
+    padding: 0px 100px;
+}
+
+.newOrAlrUser {
     text-align: center;
     color: white;
 }
+
+.newOrAlrUser:link {
+    color: white;
+}
+
+.profilePhoto {
+    display: flex;
+    width: 100px;
+    height: 100px; /* found how to crop the images in a circular way here by User Johnny Kutnowski On Oct 17th 2014: https://stackoverflow.com/questions/26421274/css-circular-cropping-of-rectangle-image */
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    background: none;
+    margin: auto;
+    object-fit: cover;
+}
+
+.userPhoto {
+    display: flex;
+    width: 100px;
+    height: 100px; /* found how to crop the images in a circular way here by User Johnny Kutnowski On Oct 17th 2014: https://stackoverflow.com/questions/26421274/css-circular-cropping-of-rectangle-image */
+    position: relative;
+    overflow: hidden;
+    border-radius: 50%;
+    background: none;
+    margin: auto;
+    object-fit: cover;
+}
+
+.bannerPhoto{
+    display: flex;
+    width: 2048px;
+    height: 300px; /* found how to crop the images in a circular way here by User Johnny Kutnowski On Oct 17th 2014: https://stackoverflow.com/questions/26421274/css-circular-cropping-of-rectangle-image */
+    max-height: 1152px;
+    max-width: 1024px;
+    position: relative;
+    overflow: hidden;
+    background: none;
+    object-fit: contain;
+}
+
+
+.profilePhoto:hover,.bannerPhoto:hover {
+    background: grey;
+    opacity: 30%;
+}
+
+
+
+.welcome{
+    display: flex;
+    justify-content: space-between;
+}
+
+.profileShortcut{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+.MostLikedBloggers {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin: 50px;
+    border: 1px solid grey;
+    border-radius: 8px;
+    padding: 10px;
+}
+
+.userBanner{
+    display: flex;
+    width: 2048px;
+    height: 300px;
+    max-height: 1152px;
+    max-width: 1024px;
+    position: relative;
+    overflow: hidden;
+    background: none;
+    object-fit: contain;
+}
+
+#popup2:after {
+    position: fixed;
+    content: "";
+    top: 0;
+    left: 0;  /* https://codepen.io/chabzz/pen/mVYVpY */
+    bottom: 0;
+    right: 0;
+    background: rgba(0,0,0,0.5);
+    z-index: -2;
+  }
+  
+  #popup2:before {
+    position: absolute;
+    content: "";
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background: #FFF;
+    z-index: -1;
+  }
