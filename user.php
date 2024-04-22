@@ -15,7 +15,7 @@
         if ($userProfile) {
             //if you are the user that is clicked on
             if ($userProfile == $SessionUser) {
-                header("Refresh:0; url=Profile.php");
+                echo "<script> window.location.href='Profile.php'</script>";
             }
         }
     }
@@ -155,7 +155,10 @@
     
                 }
                 //postContent
-                echo("<textarea readonly style='background: green; padding: 10px; border-radius: 8px;'>{$row['blogPostText']}</textarea>");
+                echo("<div class='postContent'>");
+                echo("<textarea readonly style='background: green; padding: 10px; border-radius: 8px; border: none;'>{$row['blogPostText']}</textarea>");
+                echo("<img class='tempPostImage' src='{$row['blogPostImage']}'>");
+                echo("</div>");
 
                 
             //all stuff likes below
@@ -191,7 +194,7 @@
                         $addLike->execute();
 
                     }
-                    header("refresh:0; url='user.php?user=$userProfile'");
+                    echo "<script> window.location.href='user.php?user=$userProfile'</script>";
                 }
             echo("</div>");
 

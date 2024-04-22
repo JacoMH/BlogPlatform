@@ -59,7 +59,7 @@
                 echo("<div class = 'postContent'>");
                 $textContent = $post['blogPostText'];
                 echo("<textarea readonly style='background: green; border: none;'>{$textContent}</textarea>");
-                echo($post['blogPostImage']);
+                echo("<img class='tempPostImage' src='{$post['blogPostImage']}'>");
                 echo($post['blogPostLink']);
                 echo($post['blogPostVideo']);
                 echo("</div>");
@@ -89,7 +89,7 @@
                 //delete post
                 if (isset($_POST["delete$postID"])) {
                     $deletePost = mysqli_query($mysqli, "DELETE FROM blogpost WHERE blogPostID = '$postID'");
-                    header("refresh:0;");
+                    echo "<script> window.location.href='Profile.php'</script>";
                 }
 
                 //edit post
@@ -105,7 +105,7 @@
                     echo("still working");
                     if($_POST['newText'] != "") { //improve upon this as you can just put in blank spaces
                         $updateBlogPostQuery = mysqli_query($mysqli, "UPDATE blogpost SET blogPostText = '{$_POST['newText']}' WHERE blogPostID = '$postID'");
-                        header("refresh:0;");
+                        echo "<script> window.location.href='Profile.php'</script>";
                     }
                 }
 
@@ -171,7 +171,7 @@
                         $addLike->execute();
 
                     }
-                    header("refresh:0; url='Profile.php'");
+                    echo "<script> window.location.href='Profile.php'</script>";
                 }
             }
         }

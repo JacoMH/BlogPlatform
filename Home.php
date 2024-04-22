@@ -36,7 +36,7 @@
                 //get search url
                 if (isset($_GET["searchButton"])) {
                     $searchQuery = $_GET['searchQuery'];
-                    header("Refresh:0; url='search.php?s=$searchQuery'");
+                    echo "<script> window.location.href='search.php?s=$searchQuery'</script>";
                 }
             
         echo("Most Liked Bloggers");
@@ -127,7 +127,7 @@
                             //delete post
                             if (isset($_POST["delete$postID"])) {
                                 $deletePost = mysqli_query($mysqli, "DELETE FROM blogpost WHERE blogPostID = '$postID'");
-                                header("refresh:0;");
+                                echo "<script> window.location.href='Home.php'</script>";
                             }
 
                             //edit post
@@ -143,7 +143,7 @@
                                 echo("still working");
                                 if($_POST['newText'] != "") { //improve upon this as you can just put in blank spaces
                                     $updateBlogPostQuery = mysqli_query($mysqli, "UPDATE blogpost SET blogPostText = '{$_POST['newText']}' WHERE blogPostID = '$postID'");
-                                    header("refresh:0;");
+                                    echo "<script> window.location.href='Home.php'</script>";
                                 }
                 }
 
@@ -175,7 +175,7 @@
                 
                 echo("<div style='background: green; padding: 10px; border-radius: 8px;'>");
                 echo("<textarea readonly style = 'background: green; border: none;'>{$post['blogPostText']}</textarea>");
-                echo($post['blogPostImage']);
+                echo("<img class='tempPostImage' src= '{$post['blogPostImage']}'>");
                 echo($post['blogPostLink']);
                 echo($post['blogPostVideo']);            
                 echo("</div>");

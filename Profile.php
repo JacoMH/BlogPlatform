@@ -1,7 +1,7 @@
 <?php
     session_start();
     if(empty($_SESSION['username'])) {
-        header("refresh:0; url='login.php'");
+        echo "<script> window.location.href='login.php'</script>";
     }
     require_once('includes/config.php');
     $SessionUser = $_SESSION['userID'];
@@ -22,7 +22,6 @@
 <body>
     <main class="container">
             <?php
-                echo($_SESSION['profileLikes']);
                 include("Includes/HomeShortcut.php");
 
                 include("topOfProfile.php");
@@ -32,21 +31,53 @@
                         <div class= "AllPostsContainer" style="display: flex; flex-direction: row;">
                             <textarea id="w3review" name="textContent" rows="4" cols="50"></textarea>
                             <button class = "createButton" type="submit" name="makePostButton">Create Post</button>
+                        
+                       <?php
+                       if (empty($_POST['postImageLink'])) {
+                        echo("<img name= 'postImage' class='tempPostImage' src=''>");
+                       }
+                       else {
+                        echo("<img name= 'postImage' class='tempPostImage' src='{$_POST['postImageLink']}'>");
+                        $_SESSION['TempStoreImage'] = $_POST['postImageLink'];
+                       }
+                       
+                       ?>
+                            <link></link>
                         </div>
                         <div style="display: flex; flex-direction: row;">
-                        <button class = "createButton" type="button" name="imageContent">Add Image</button>
+                        <form method= 'POST'>
+                        <button class = "createButton" type="submit" name="imageContent">Add Image</button>
+                        </form>
                         <button class = "createButton" type="button" name="linkContent">Add Link</button>
                         <button class = "createButton" type="button" name="videoContent">Add Video</button>
                         <input type="checkbox" name="commentToggle" checked>Enable Comments</input>
                         </div>
-                    </form>
+            </form>
                     <?php
+                        $_POST['postImageLink'] = "";
+                        if (isset($_POST['imageContent']) && $_POST['postImageLink'] != "") {
+                            echo("<form method='POST' action='Profile.php'>");
+                            echo("<input type='text' name='postImageLink' value = '{$_POST['postImage']}' placeholder = 'image address here...'>");
+                            
+                            echo("<button type='submit' name='confirmImagePicture'>add</button>");
+                            echo("</form>");
+                        }
+                        else if (isset($_POST['imageContent']) && $_POST['postImageLink'] == "") {
+                            echo("<form method='POST' action='Profile.php'>");
+                            echo("<input type='text' name='postImageLink' placeholder = 'image address here...'>");
+                            echo("<button type='submit' name='confirmImagePicture'>add</button>");
+                            echo("</form>");
+                        }
+
                         if (isset($_POST['makePostButton']) && $_POST['textContent'] != "") {
                             $postContent = $_POST['textContent'] ?? null;
                             $commentToggle = $_POST['commentToggle'] ?? null;
-                            $addToPosts = $mysqli->prepare("INSERT INTO blogpost (userID, blogPostText, commentsEnabled, DateAndTime) VALUES ('$SessionUser', '$postContent', '$commentToggle', now())");
+                            $imageContent = $_SESSION['TempStoreImage'];
+                            $postLink = 
+                            $postVideo = 
+                            $addToPosts = $mysqli->prepare("INSERT INTO blogpost (userID, blogPostText, commentsEnabled, blogPostImage, DateAndTime) VALUES ('$SessionUser', '$postContent', '$commentToggle', '$imageContent', now())");
                             $addToPosts->execute();
-                            header("location = Profile.php");
+                        //    echo "<script> window.location.href='Profile.php'</script>";
                         }
         ?>
         </div>

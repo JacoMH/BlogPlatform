@@ -298,3 +298,7 @@ textarea {
     background: #FFF;
     z-index: -1;
   }
+
+.tempPostImage{
+    max-width: 200px;
+}

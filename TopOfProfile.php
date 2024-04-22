@@ -7,7 +7,7 @@
         $updatedPic = $_POST['profilePictureLink'];
         $updateProfilePic = mysqli_query($mysqli, "UPDATE user SET profilePicture = '$updatedPic' WHERE userID = '$SessionUser'");
         $_SESSION['profilePicture'] = $_POST['profilePictureLink'];  
-        header("refresh:0;");
+        echo "<script> window.location.href='Profile.php'</script>";
     } 
 
     //if submit banner picture image
@@ -47,9 +47,7 @@
     echo("</div>");
 
     While($profileInfo = mysqli_fetch_assoc($TopOfProfileQuery)) {
-    $profileLikes = $profileInfo['profileLikes'];
 
-    echo("Profile Likes: "); echo($_SESSION['profileLikes']);
     echo("</div>");
 
     echo("<form class='profilePhoto' method='POST'>");

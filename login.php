@@ -27,8 +27,9 @@
             <div class="newOrAlrUser">
                 New User? <a href="Registration.php">Sign Up Here</a>
             </div>
-        </form>
+    
         <?php
+        $check_username = "";
             if (isset($_POST['logButton']) && $_POST['username'] != "" && $_POST["password"] != "" && $_POST["securityAns"] != "") {
                 $username = $_POST["username"] ?? null; $username = preg_replace('/\s+/', '', $username);
                 $password = $_POST["password"] ?? null; $password = preg_replace('/\s+/', '', $password);
@@ -58,19 +59,25 @@
                         $_SESSION["profilePicture"] = $profilePic;
                         $_SESSION["bannerPicture"] = $bannerPic;
                         $_SESSION['profileLikes'] = $profileLikes;
-                        echo("<h2>logged in</h2>");
                         header("Location: Profile.php", true, 301);         
-                    }
-                    else{
-                        echo("<h2>Incorrect credentials, Try again.</h2>");
                     }
                 }
                 else{
-                    echo("no login");
+                    echo("<p style= 'color: #d91e47; align-text: center;'>Incorrect credentials, Try again.</p>");
                 }
+                echo("</form>");
                 //may change this as it does seem a bit pointless, could find a way to check if it exists in the database then move on.
                 //find a way to if the login information is correct collect stuff and store it so you can go to the profile page and view stuff
             }
+        else if(isset($_POST['logButton']) && $_POST['username'] == "") { //validation
+            echo("<p style= 'color: #d91e47; align-text: center;'>Username not filled.</p>");
+        }
+        else if(isset($_POST['logButton']) && $_POST['password'] == "") {
+            echo("<p style= 'color: #d91e47; align-text: center;'>Password not filled.</p>");
+        }
+        else if(isset($_POST['logButton']) && $_POST['securityAns'] == "") {
+            echo("<p style= 'color: #d91e47; align-text: center;'>Security Question not filled.</p>");
+        }
         ?>
     </div>
 

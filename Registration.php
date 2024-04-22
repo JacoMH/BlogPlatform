@@ -29,7 +29,7 @@
                 <div class="newOrAlrUser">
                     Already User? <a href="login.php">Login here</a>
                 </div>              
-            </form>
+
             <?php
                 if (isset($_POST['regButton']) && $_POST["fname"] != "" && $_POST["lname"] != "" && $_POST["dateTime"] != null && $_POST["email"] != null && $_POST["username"] != null && $_POST["password"] != null && $_POST["securityAns"] != null) {
                     $first_name = $_POST["fname"] ?? null; 
@@ -43,8 +43,12 @@
                     $send = $mysqli->prepare( "INSERT INTO user (username, firstName, lastName, DOB, email, hashedPass, securityQuestionAns) VALUES ('$username', '$first_name', '$last_name', '$dateTime', '$email', '$hash', '$securityAnswer')");
                     $send->execute();
                     header("Location: login.php", true, 301);
+                }
+                else if (isset($_POST['regButton'])) {
+                    echo("<p style= 'color: #d91e47; align-text: center;'>All boxes must be filled.</p>");
                 }   
             ?>
+            </form>
         <?php
             include("Includes/footer.php");
             ?>
