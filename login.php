@@ -47,6 +47,7 @@
                     $profilePic = $row["profilePicture"];
                     $bannerPic = $row["bannerPicture"];
                     $profileLikes = $row["profileLikes"];
+                    $jobTitle = $row['jobTitle'];
                 }
                 if ($username == $check_username && $securityAnswer == $check_SecurityQ) {
                     $valid = password_verify ($password, $check_password);
@@ -59,7 +60,13 @@
                         $_SESSION["profilePicture"] = $profilePic;
                         $_SESSION["bannerPicture"] = $bannerPic;
                         $_SESSION['profileLikes'] = $profileLikes;
-                        header("Location: Profile.php", true, 301);         
+                        $_SESSION['jobTitle'] = $jobTitle;
+                        if ($_SESSION['jobTitle'] == 'Admin') {
+                            header("Location: admin/Home.php", true, 301); 
+                        }        
+                        else {
+                            header("Location: Profile.php", true, 301);
+                        }
                     }
                 }
                 else{

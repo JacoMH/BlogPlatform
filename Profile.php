@@ -77,7 +77,7 @@
                             $postVideo = 
                             $addToPosts = $mysqli->prepare("INSERT INTO blogpost (userID, blogPostText, commentsEnabled, blogPostImage, DateAndTime) VALUES ('$SessionUser', '$postContent', '$commentToggle', '$imageContent', now())");
                             $addToPosts->execute();
-                        //    echo "<script> window.location.href='Profile.php'</script>";
+                            echo "<script> window.location.href='Profile.php'</script>";
                         }
         ?>
         </div>
@@ -86,9 +86,6 @@
             <?php
                 include("ProfilePosts.php");
             ?>
-
-
- 
             
 
     </main>

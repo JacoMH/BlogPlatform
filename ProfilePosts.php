@@ -34,7 +34,7 @@
 <body>
     <div class="AllPostsContainer">
     
-    <form method="POST" action="Profile.php" style='padding-bottom: 10px; display: flex; justify-content: center;'>
+    <form method="POST" action="Profile.php" style='padding-bottom: 10px; display: flex; justify-content: center;' action='refresh()'>
     <label>Sort By:</label>
     <select name="Filters">
         <option selected="" disabled="" style='display: none;'><?php echo($currentFilter); ?></option>
@@ -54,8 +54,10 @@
             echo("</div>");
             echo("<span class='username' style='font-size: large; display: flex; justify-content: center;'> {$_SESSION['username']}</span>");
             echo("</div>");
-            
-            if($post['blogPostText'] != "") { //add these param afterwards && $row['blogPostImage'] != "" && $row['blogPostLink'] != "" && $row['blogPostVideo'] != ""
+            if ($post < 1) {
+                echo("No posts");
+            }
+            if($post['blogPostText'] != "") {
                 echo("<div class = 'postContent'>");
                 $textContent = $post['blogPostText'];
                 echo("<textarea readonly style='background: green; border: none;'>{$textContent}</textarea>");

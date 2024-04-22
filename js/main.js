@@ -35,3 +35,22 @@ function on() {
   function off() {
     document.getElementById("overlay").style.display = "none";
   }
+
+ window.history.scrollRestoration = manual;
+ 
+function refresh() {
+    alert("hello");
+    // Retrieve the sidebar element
+let sidebar = document.querySelector(".sidebar");
+
+// Retrieve the stored scroll position from localStorage
+let storedScrollPosition = localStorage.getItem("sidebarScroll");
+// If a stored scroll position exists, scroll the sidebar to that position
+if (storedScrollPosition !== null) {
+  sidebar.scrollTop = Number(storedScrollPosition);
+}
+// Store the scroll position in localStorage before the page is unloaded
+window.addEventListener("beforeunload", () => {
+  localStorage.setItem("sidebarScroll", sidebar.scrollTop);
+});
+}

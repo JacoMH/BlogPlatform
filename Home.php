@@ -82,7 +82,7 @@
         echo("<div class='AllPostsContainer'>");
         ?>
             <!-- filter -->
-           <form method="POST" action="Home.php" style="display: flex; justify-content: center;" >
+           <form method="POST" action='Home.php' style="display: flex; justify-content: center;">
             <label>Sort By:</label>
             <select name="Filters">
                 <option selected="" disabled="" style='display: none;'><?php echo($currentFilter); ?></option>
@@ -189,6 +189,9 @@
         <?php
         include("Includes/footer.php");
         ?>
+        <script src="js/main.js">
+            refresh();
+        </script>
     </main>
 </body>
 </html>
