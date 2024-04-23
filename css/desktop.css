@@ -127,6 +127,9 @@ li {
     padding: 10px;
     border: 1px solid grey;
     border-radius: 8px;
+    min-width: 200px;
+    max-width: 600px;
+    align-items: center;
 }
 
 .topbanner{
@@ -301,4 +304,26 @@ textarea {
 
 .tempPostImage{
     max-width: 200px;
+}
+
+.profile{
+    margin: 50px;
+    background: lightgrey;
+    border-radius: 8px;
+    border: 1px solid black;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    max-width: 200px;
+    min-width: 100px;
+    padding: 20px;
+}
+
+.profilesContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.BloggerProfile{
+    margin-right: 10px;
 }

@@ -19,9 +19,13 @@
         if (!empty($_SESSION['username'])) {
             require_once('includes/profileShortcut.php');
             $SessionUser = $_SESSION['userID'];
+            $_SESSION['on'] = "yes";
         }
         else {
             require_once('includes/loginReg.php');
+            $_SESSION['on'] = "no";
+            $_SESSION['jobTitle'] = "signedOut";
+            $SessionUser = "signedOut";
         }
         ?>
         </div>
@@ -111,8 +115,9 @@
                     echo("<span class='username' style='font-size: large; display: flex; justify-content: center;'> {$PosterProfile['username']}</span>");
                     $postUserID = $PosterProfile['userID'];
                     
-                //if sessionUser made the post they get these permissions on it
-                if ($post['userID'] == $SessionUser) {
+                    //if sessionUser made the post they get these permissions on it
+                    if ($_SESSION['on'] == "yes") {
+                        if ($post['userID'] == $SessionUser) {
                     
                             //edit button
                             echo("<form class='editButton' method='POST' action='Home.php'>");
@@ -148,7 +153,80 @@
                 }
 
                 }
+                    }
+
+                    //likes
+
+
+
+
+                        //update total likes on post (in post likes table)
+                        $updateBlogPostLikesQuery = mysqli_query($mysqli, "SELECT count(blogPostID) As count FROM userlikedposts WHERE blogPostID = '$postID'");
+
+                        //update in comment table
+                        while ($updateLikes = mysqli_fetch_assoc($updateBlogPostLikesQuery)) {
+                        $LikeBlogPostQuery = mysqli_query($mysqli, "UPDATE blogpost SET LikesOnPost = '{$updateLikes['count']}' WHERE blogPostID = '$postID'");
+                        }   
+
+
+
                     
+                        if ($_SESSION['on'] = "yes") {
+                            if ($_SESSION['jobTitle'] == 'Admin' || $_SESSION['jobTitle'] == 'Moderator') {
+                                //if admin or moderator, can delete comment
+                                echo("<form class='deleteButton' method='POST' action='Home.php'>");
+                                echo("<button type = 'submit' name = 'deleted$postID'>delete</button>");
+                                echo("</form>");
+                                }
+        
+                                if (isset($_POST["deleted$postID"])) {
+                                $deleteCommentQuery = mysqli_query($mysqli, "DELETE FROM commentblogpost WHERE commentID = '$commentID'");
+                                echo "<script> window.location.href='comment.php?post=$currentPost''</script>";
+                                }
+        
+                                //create like button
+                                echo("<form class='likeButton' method='POST' action='Home.php'>");
+                                echo("<button name = 'Like$postID'>like</button>");
+                                echo("</form>");
+                                
+                                //like/dislike post
+                                $BlogPostLikesQuery = mysqli_query($mysqli, "SELECT count(blogPostID) As count FROM userlikedposts WHERE blogPostID = '$postID'");
+                                while($ShowLikes = mysqli_fetch_assoc($BlogPostLikesQuery)) {
+                                    echo($ShowLikes['count']);
+                                    }
+        
+                                if (isset($_POST["Like$postID"]) && $SessionUser != "signedOut") {
+                                    if (isset($_POST["Like$postID"]) && $SessionUser != "signedOut") {
+                                        $checkIfLikedQuery = mysqli_query($mysqli, "SELECT * FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '$postID'"); //check if user has liked post or not
+                                        $CheckLikedNumRows = mysqli_num_rows($checkIfLikedQuery); //found a method of liking and unliking a post without inserting duplicate keys into the database here: https://stackoverflow.com/questions/2848904/check-if-record-exists By User Dominic Rodger
+        
+                                        if ($CheckLikedNumRows > 0) {
+                                            echo("remove like");
+                                            $removeLike = $mysqli->prepare("DELETE FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '$postID'");
+                                            $removeLike->execute();
+                                            
+                                        }
+                                        else {
+                                            echo("add like");
+                                            $addLike = $mysqli->prepare("INSERT INTO userlikedposts (userID, blogPostID) VALUES($SessionUser, $postID)");
+                                            $addLike->execute();
+        
+                                        }
+                                        echo "<script> window.location.href='Home.php''</script>";
+                                    }
+                                }
+                        }
+                        
+
+
+
+
+
+
+
+
+
+
                     
                     
                     //find number of comments
@@ -156,7 +234,7 @@
                     
                     While ($numOfComments = mysqli_fetch_assoc($numOfCommentsQuery)) {
                         $commentNum = $numOfComments['NumOfComments'];
-                        if ($_SESSION['userID']) {
+
                             //toggle comments
                         if ($post['commentsEnabled'] == "on") {
                             echo("<span><a href='comment.php?post=$postID'>Comments($commentNum)</a></span>");
@@ -169,7 +247,6 @@
                         echo("<div class='smallCommentText'>");
                             echo($post['DateAndTime']);
                         echo("</div>");
-                    }
                 }
                 echo("</div>");
                 

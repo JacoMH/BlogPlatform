@@ -36,13 +36,11 @@
                     $findUsersQuery = "SELECT * FROM user WHERE username LIKE '%$Query%' OR userID LIKE '%$Query%'";
                     $findUsersLink = mysqli_query($mysqli, $findUsersQuery);           
                     $findUsersResult = mysqli_fetch_assoc($findUsersLink);
-                    echo("hello");
-                    echo("<div class='AllPostsContainer' style='padding: 30px 100%; max-padding: 30px 400px;'>");
+                    echo("<div class='profilesContainer'>");
                         while ($findUsersResult = mysqli_fetch_assoc($findUsersLink)) { //if results
-                            echo($findUsersResult['username']);
                             $username = $findUsersResult['username'];
                             $userID = $findUsersResult['userID'];
-                        echo("<div class='BloggerProfile'>");
+                        echo("<div class='profile'>");
                             echo("<a href='user.php?user=$userID'><img class = 'userPhoto' src='{$findUsersResult['profilePicture']}'></a>");
                             echo("<span class = 'username' style='font-size: large; display: flex; justify-content: center;'>$username</span>");
                         echo("</div>");

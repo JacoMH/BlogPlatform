@@ -17,6 +17,14 @@
             if ($userProfile == $SessionUser) {
                 echo "<script> window.location.href='Profile.php'</script>";
             }
+
+            $checkIfAdminQuery = mysqli_query($mysqli, "SELECT * FROM user WHERE userID = '$userProfile'");
+            
+            while ($checkIfAdmin = mysqli_fetch_assoc($checkIfAdminQuery)) {
+                if ($checkIfAdmin['jobTitle'] == "Admin") {
+                    echo "<script> window.location.href='Home.php'</script>";
+                }
+            }
         }
     }
 
@@ -110,7 +118,6 @@
 
     //profile posts
         while ($row = mysqli_fetch_assoc($userPostQuery)) {
-
             //post content
             echo("<div class='post'>");
             

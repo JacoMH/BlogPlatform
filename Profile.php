@@ -3,6 +3,10 @@
     if(empty($_SESSION['username'])) {
         echo "<script> window.location.href='login.php'</script>";
     }
+    
+    if($_SESSION['jobTitle'] = "Admin") {
+        echo "<script> window.location.href='admin/Home.php'</script>";
+    }
     require_once('includes/config.php');
     $SessionUser = $_SESSION['userID'];
 
