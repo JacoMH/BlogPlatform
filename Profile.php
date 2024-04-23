@@ -4,7 +4,7 @@
         echo "<script> window.location.href='login.php'</script>";
     }
     
-    if($_SESSION['jobTitle'] = "Admin") {
+    if($_SESSION['jobTitle'] == "Admin") {
         echo "<script> window.location.href='admin/Home.php'</script>";
     }
     require_once('includes/config.php');
@@ -46,43 +46,57 @@
                        }
                        
                        ?>
-                            <link></link>
                         </div>
                         <div style="display: flex; flex-direction: row;">
                         <form method= 'POST'>
                         <button class = "createButton" type="submit" name="imageContent">Add Image</button>
                         </form>
-                        <button class = "createButton" type="button" name="linkContent">Add Link</button>
-                        <button class = "createButton" type="button" name="videoContent">Add Video</button>
+                        <form method= 'POST'>
+                        <button class = "createButton" type="submit" name="linkContent">Add Link</button>
+                        </form>
+                        <form method = 'POST'>
+                        <button class = "createButton" type="submit" name="videoContent">Add Video</button>
+                        </form>
                         <input type="checkbox" name="commentToggle" checked>Enable Comments</input>
                         </div>
             </form>
                     <?php
+                    //image
                         $_POST['postImageLink'] = "";
-                        if (isset($_POST['imageContent']) && $_POST['postImageLink'] != "") {
+                        if (isset($_POST['imageContent'])) { //&& $_POST['postImageLink'] != ""
                             echo("<form method='POST' action='Profile.php'>");
                             echo("<input type='text' name='postImageLink' value = '{$_POST['postImage']}' placeholder = 'image address here...'>");
                             
                             echo("<button type='submit' name='confirmImagePicture'>add</button>");
                             echo("</form>");
                         }
-                        else if (isset($_POST['imageContent']) && $_POST['postImageLink'] == "") {
+                        
+                         if (isset($_POST['linkContent'])) { //&& $_POST['postImageLink'] != ""
                             echo("<form method='POST' action='Profile.php'>");
-                            echo("<input type='text' name='postImageLink' placeholder = 'image address here...'>");
-                            echo("<button type='submit' name='confirmImagePicture'>add</button>");
+                            echo("<input type='text' name='postImageLink' placeholder = 'link address here...'>");
+                            echo("<button type='submit' name='confirmLink'>add</button>");
+                            echo("</form>");
+                        }
+
+                         if (isset($_POST['videoContent'])) { // && $_POST['postImageLink'] != ""
+                            echo("<form method='POST' action='Profile.php'>");
+                            echo("<input type='text' name='postImageLink' placeholder = 'YouTube address here...'>");
+                            echo("<button type='submit' name='confirmVideo'>add</button>");
                             echo("</form>");
                         }
 
                         if (isset($_POST['makePostButton']) && $_POST['textContent'] != "") {
                             $postContent = $_POST['textContent'] ?? null;
                             $commentToggle = $_POST['commentToggle'] ?? null;
-                            $imageContent = $_SESSION['TempStoreImage'];
-                            $postLink = 
-                            $postVideo = 
+                            $imageContent = $_SESSION['TempStoreImage'] ?? null;
+                            $postLink = $_SESSION['TempStoreLink'] ?? null;
+                            $postVideo = $_SESSION['TempStoreVideo'] ?? null;
                             $addToPosts = $mysqli->prepare("INSERT INTO blogpost (userID, blogPostText, commentsEnabled, blogPostImage, DateAndTime) VALUES ('$SessionUser', '$postContent', '$commentToggle', '$imageContent', now())");
                             $addToPosts->execute();
                             echo "<script> window.location.href='Profile.php'</script>";
                         }
+
+           
         ?>
         </div>
             

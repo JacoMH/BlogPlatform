@@ -21,10 +21,13 @@
             $SessionUser = $_SESSION['userID'];
             $_SESSION['on'] = "yes";
         }
+        else if ($_SESSION['jobTitle'] == "user") {
+            include("includes/HomeShortcut.php");
+        }
         else {
             require_once('includes/loginReg.php');
             $_SESSION['on'] = "no";
-            $_SESSION['jobTitle'] = "signedOut";
+            $_SESSION['jobTitle'] = "signedOut";  //tells different parts of the site to disable/enable features based on if we are logged in or not
             $SessionUser = "signedOut";
         }
         ?>
@@ -137,7 +140,6 @@
 
                             //edit post
                             if (isset($_POST["edit$postID"])) {
-                                echo("Hllo");
                                 echo("<form method='POST'>");
                                 echo("<textarea name='newText'>{$post['blogPostText']}</textarea>");
                                 echo("<button type='submit' name='SubmitEdit$postID'>Submit Changes</button>");
@@ -145,7 +147,6 @@
                             }
 
                             if (isset($_POST["SubmitEdit$postID"])) {
-                                echo("still working");
                                 if($_POST['newText'] != "") { //improve upon this as you can just put in blank spaces
                                     $updateBlogPostQuery = mysqli_query($mysqli, "UPDATE blogpost SET blogPostText = '{$_POST['newText']}' WHERE blogPostID = '$postID'");
                                     echo "<script> window.location.href='Home.php'</script>";
@@ -155,18 +156,10 @@
                 }
                     }
 
-                    //likes
 
 
 
-
-                        //update total likes on post (in post likes table)
-                        $updateBlogPostLikesQuery = mysqli_query($mysqli, "SELECT count(blogPostID) As count FROM userlikedposts WHERE blogPostID = '$postID'");
-
-                        //update in comment table
-                        while ($updateLikes = mysqli_fetch_assoc($updateBlogPostLikesQuery)) {
-                        $LikeBlogPostQuery = mysqli_query($mysqli, "UPDATE blogpost SET LikesOnPost = '{$updateLikes['count']}' WHERE blogPostID = '$postID'");
-                        }   
+                    
 
 
 
@@ -183,16 +176,28 @@
                                 $deleteCommentQuery = mysqli_query($mysqli, "DELETE FROM commentblogpost WHERE commentID = '$commentID'");
                                 echo "<script> window.location.href='comment.php?post=$currentPost''</script>";
                                 }
-        
+                                
+                                        
+                                //update total likes on post (in post likes table)
+                                $updateBlogPostLikesQuery = mysqli_query($mysqli, "SELECT count(blogPostID) As count FROM userlikedposts WHERE blogPostID = '$postID'");
+                                $LikeNum = mysqli_fetch_assoc($updateBlogPostLikesQuery);
+
+
+                                //update likes in post table
+                                $LikeBlogPostQuery = mysqli_query($mysqli, "UPDATE blogpost SET LikesOnPost = '{$LikeNum['count']}' WHERE blogPostID = '$postID'");
+                           
+
+
+
                                 //create like button
                                 echo("<form class='likeButton' method='POST' action='Home.php'>");
                                 echo("<button name = 'Like$postID'>like</button>");
+                                    echo("<label>{$LikeNum['count']}</label>");
                                 echo("</form>");
                                 
                                 //like/dislike post
                                 $BlogPostLikesQuery = mysqli_query($mysqli, "SELECT count(blogPostID) As count FROM userlikedposts WHERE blogPostID = '$postID'");
                                 while($ShowLikes = mysqli_fetch_assoc($BlogPostLikesQuery)) {
-                                    echo($ShowLikes['count']);
                                     }
         
                                 if (isset($_POST["Like$postID"]) && $SessionUser != "signedOut") {
@@ -201,18 +206,17 @@
                                         $CheckLikedNumRows = mysqli_num_rows($checkIfLikedQuery); //found a method of liking and unliking a post without inserting duplicate keys into the database here: https://stackoverflow.com/questions/2848904/check-if-record-exists By User Dominic Rodger
         
                                         if ($CheckLikedNumRows > 0) {
-                                            echo("remove like");
                                             $removeLike = $mysqli->prepare("DELETE FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '$postID'");
                                             $removeLike->execute();
                                             
                                         }
                                         else {
-                                            echo("add like");
                                             $addLike = $mysqli->prepare("INSERT INTO userlikedposts (userID, blogPostID) VALUES($SessionUser, $postID)");
                                             $addLike->execute();
         
                                         }
-                                        echo "<script> window.location.href='Home.php''</script>";
+                                     //   echo "<script> window.location.href='Home.php''</script>";
+                                        header("refresh: 0;");
                                     }
                                 }
                         }

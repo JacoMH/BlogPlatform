@@ -53,7 +53,6 @@
                     $valid = password_verify ($password, $check_password);
                     if ($valid) {
                         session_start();
-                        $_SESSION['on'] = "yes"; //tells different parts of the site to disable/enable features based on if we are logged in or not
                         $_SESSION["userID"] = $userID;
                         $_SESSION["username"] = $check_username;
                         $_SESSION["firstName"] = $first_name;
