@@ -101,7 +101,7 @@ li {
     background:green;
     border-radius: 4px;
     display: flex;
-    flex-direction:row;
+    flex-direction:column;
     align-content: center;
     padding:10px;
 }
@@ -128,7 +128,7 @@ li {
     border: 1px solid grey;
     border-radius: 8px;
     min-width: 200px;
-    max-width: 600px;
+    max-width: 1000px;
     align-items: center;
 }
 
@@ -150,7 +150,6 @@ li {
     align-items: center;
     word-break: break-word;
     padding-top: 20px;
-    border-top: 1px solid grey;
     padding: 20px 0px;
 }
 
@@ -326,4 +325,8 @@ textarea {
 
 .BloggerProfile{
     margin-right: 10px;
+}
+
+label {
+    padding: 3px;
 }

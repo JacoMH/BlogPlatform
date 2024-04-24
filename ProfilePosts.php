@@ -52,7 +52,6 @@
         $postCount = mysqli_num_rows($postQuery);
         if ($postCount > 0) {
             while ($post = mysqli_fetch_assoc($postQuery)) {
-                echo("posts");
                 echo("<main style='display: flex; flex-direction: row;'>");    
                     echo("<div style= 'padding-right: 10px;'>");
                     echo("<div class = 'userPhoto'>");
@@ -68,8 +67,14 @@
                         $textContent = $post['blogPostText'];
                         echo("<textarea readonly style='background: green; border: none;'>{$textContent}</textarea>");
                         echo("<img class='tempPostImage' src='{$post['blogPostImage']}'>");
-                        echo($post['blogPostLink']);
-                        echo($post['blogPostVideo']);
+                        echo("<a href={$post['blogPostLink']}>{$post['blogPostLink']}</a>");
+                        //video
+                        if (!empty($post['blogPostVideo'])) {
+                            $parse = parse_url($post['blogPostVideo']); 
+                            $query = $parse['query'];
+                            $final=substr($query,2);
+                            echo("<iframe width='420' height='315' src='https://www.youtube.com/embed/{$final}'></iframe>"); 
+                        }
                         echo("</div>");
                         $postID = $post['blogPostID'];
                         $blogPostText = $post['blogPostText'];
@@ -147,7 +152,7 @@
                         While ($numOfComments = mysqli_fetch_assoc($numOfCommentsQuery)) {
                             
                             
-                            $commentNum = $numOfComments['NumOfComments'];#
+                            $commentNum = $numOfComments['NumOfComments'];
                             
                             
                             $numCommentsStore = mysqli_query($mysqli, "UPDATE blogpost SET NumOfComments = '$commentNum' WHERE blogPostID = '$postID'"); //UPDATE total number of comments in blogpost record

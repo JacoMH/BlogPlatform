@@ -54,22 +54,31 @@
             
             //fetch user receiving the comments
             $commentedUserQuery = mysqli_query($mysqli, "SELECT * FROM user WHERE userID = '$userWhoMadePostID' ");
-            echo("<div style='align-self: center; max-width: 200px;'>");
+            echo("<div style='align-self: center; max-width: 200px; display: flex; flex-direction: row; justify-content: center; '>");
             While ($commentedUser = mysqli_fetch_assoc($commentedUserQuery)) {
-                echo("<div style='display: flex; flex-direction: column;'>");
+                echo("<div style='display: flex; flex-direction: column; padding-right: 5px; align-self: center; '>");
+                echo("<div style='display: flex; justify-content: column;'>");
                 echo("<div class = 'userPhoto'>");
                 echo("<img class='userPhoto' src='{$commentedUser['profilePicture']}' alt= 'Profile Picture'>");
                 echo("</div>");
                 echo("</div>");
                 echo("<span class='username' style='font-size: large; display: flex; justify-content: center;'> {$commentedUser['username']}</span>");
-            }
-
-            echo("<div class = 'postContent' style='display: flex; justify-content: center; background: green;'>");
-                echo("<textarea style= 'background: green; border: none;'readonly>{$postToCommentOn['blogPostText']}</textarea>");
-                echo($postToCommentOn['blogPostImage']);
-                echo($postToCommentOn['blogPostLink']);
-                echo($postToCommentOn['blogPostVideo']);
                 echo("</div>");
+            }
+            echo("<div>");
+            echo("<div class = 'postContent' style='display: flex; justify-content: center; background: green; min-width: 400px; max-width: 1000px; align-items: center;'>");
+                echo("<textarea style= 'background: green; border: none;'readonly>{$postToCommentOn['blogPostText']}</textarea>");
+                echo("<img class= 'tempPostImage' src='{$postToCommentOn['blogPostImage']}'>");
+                echo("<a href={$postToCommentOn['blogPostLink']}>{$postToCommentOn['blogPostVideo']}</a>");
+                //video
+                if (!empty($postToCommentOn['blogPostVideo'])) {
+                    $parse = parse_url($postToCommentOn['blogPostVideo']); 
+                    $query = $parse['query'];
+                    $final=substr($query,2);
+                    echo("<iframe width='220' height='215' src='https://www.youtube.com/embed/{$final}'></iframe>"); 
+                }
+                echo("</div>");
+            echo("</div>");
             echo("</div>");
         }
     ?>
@@ -91,81 +100,93 @@
                 }
 
                 $fetchCommentsQuery = mysqli_query($mysqli, "SELECT * FROM commentblogpost WHERE blogPostID = '$currentPost'");
-
-                //show comments
-                while ($fetchComments = mysqli_fetch_assoc($fetchCommentsQuery)) {
-                   echo("<div class='post' style='display: flex; flex-direction: row; align-items: center;'>");
+                $checkIfComments = mysqli_num_rows($fetchCommentsQuery);
                 
-
-                   //get commenter profile
-                   $commenterProfileQuery = mysqli_query($mysqli, "SELECT * FROM user WHERE userID = '{$fetchComments['userID']}'");
-                   while ($fetchCommenterProfile = mysqli_fetch_assoc($commenterProfileQuery)) {
-                    echo("<div class='BloggerProfile'>");
-                    echo("<a href='user.php?user={$fetchCommenterProfile['userID']}'><img class='userPhoto' src = '{$fetchCommenterProfile['profilePicture']}' alt = 'Profile Picture'></a>");
-                     echo("<span style='font-size: large; display: flex; justify-content: center;'> {$fetchCommenterProfile['username']}</span>");
-                     echo("</div>");
-                   }
-                   echo("<div style='padding: 10px; background: green; padding: 10px; border-radius: 8px;'>");
-                   echo("<textarea style= 'background: green; border: none;'readonly>{$fetchComments['commentText']}</textarea>");
-                   echo("</div>");
-
-                   //update total likes on comment (in comment likes table)
-                   $commentID = $fetchComments['commentID'];
-                   $updateCommentLikesQuery = mysqli_query($mysqli, "SELECT count(commentID) As count FROM userlikedcomments WHERE commentID = '$commentID'");
-
-                   //update in comment table
-                   while ($updateLikes = mysqli_fetch_assoc($updateCommentLikesQuery)) {
-                    $LikeCommentQuery = mysqli_query($mysqli, "UPDATE commentblogpost SET LikesOnComment = '{$updateLikes['count']}' WHERE commentID = '$commentID'");
-                   }   
-
-
-
-                   //if admin or moderator, can delete comment
-                   if ($_SESSION['jobTitle'] == 'Admin' || $_SESSION['jobTitle'] == 'Moderator') {
-                    echo("<form class='deleteButton' method='POST' action='comment.php?post=$currentPost'>");
-                    echo("<button type = 'submit' name = 'delete$commentID'>delete</button>");
-                    echo("</form>");
-                   }
-
-                   if (isset($_POST["delete$commentID"])) {
-                    $deleteCommentQuery = mysqli_query($mysqli, "DELETE FROM commentblogpost WHERE commentID = '$commentID'");
-                    echo "<script> window.location.href='comment.php?post=$currentPost''</script>";
-                   }
-
-                   //create like button
-                    echo("<form class='likeButton' method='POST' action='comment.php?post=$currentPost'>");
-                    echo("<button name = '{$fetchComments['blogPostID']}'>like</button>");
-                    echo("</form>");
-                    
-                    //like/dislike post
-                    $CommentLikesQuery = mysqli_query($mysqli, "SELECT count(commentID) As count FROM userlikedcomments WHERE commentID = '$commentID'");
-                    while($ShowLikes = mysqli_fetch_assoc($CommentLikesQuery)) {
-                        echo($ShowLikes['count']);
-                       }
-
-                    if (isset($_POST["{$fetchComments['blogPostID']}"])) {
-                        if (isset($_POST["{$fetchComments['blogPostID']}"])) {
-                            $checkIfLikedQuery = mysqli_query($mysqli, "SELECT * FROM userlikedcomments WHERE userID = '$SessionUser' AND CommentID = '{$fetchComments['commentID']}'"); //check if user has liked post or not
-                            $CheckLikedNumRows = mysqli_num_rows($checkIfLikedQuery); //found a method of liking and unliking a post without inserting duplicate keys into the database here: https://stackoverflow.com/questions/2848904/check-if-record-exists By User Dominic Rodger
-    
-                            if ($CheckLikedNumRows > 0) {
-                                $removeLike = $mysqli->prepare("DELETE FROM userlikedcomments WHERE userID = '$SessionUser' AND commentID = '{$fetchComments['commentID']}'");
-                                $removeLike->execute();
-                                
-                            }
-                            else {
-                                $addLike = $mysqli->prepare("INSERT INTO userlikedcomments (userID, CommentID) VALUES($SessionUser, {$fetchComments['commentID']})");
-                                $addLike->execute();
-    
-                            }
-                            echo "<script> window.location.href='comment.php?post=$currentPost''</script>";
-                        }
+                if ($checkIfComments > 0) {
+                        //show comments
+                while ($fetchComments = mysqli_fetch_assoc($fetchCommentsQuery)) {
+                    echo("<div class='post' style='display: flex; flex-direction: row; align-items: center;'>");
+                 
+ 
+                    //get commenter profile
+                    $commenterProfileQuery = mysqli_query($mysqli, "SELECT * FROM user WHERE userID = '{$fetchComments['userID']}'");
+                    while ($fetchCommenterProfile = mysqli_fetch_assoc($commenterProfileQuery)) {
+                     echo("<div class='BloggerProfile'>");
+                     echo("<a href='user.php?user={$fetchCommenterProfile['userID']}'><img class='userPhoto' src = '{$fetchCommenterProfile['profilePicture']}' alt = 'Profile Picture'></a>");
+                      echo("<span style='font-size: large; display: flex; justify-content: center;'> {$fetchCommenterProfile['username']}</span>");
+                      echo("</div>");
                     }
-                echo("</div>");
-                echo("</div>");
+                    echo("<div style='padding: 10px; background: green; padding: 10px; border-radius: 8px;'>");
+                    echo("<textarea style= 'background: green; border: none;'readonly>{$fetchComments['commentText']}</textarea>");
+                    echo("</div>");
+ 
+                    //update total likes on comment (in comment likes table)
+                    $commentID = $fetchComments['commentID'];
+                    $updateCommentLikesQuery = mysqli_query($mysqli, "SELECT count(commentID) As count FROM userlikedcomments WHERE commentID = '$commentID'");
+ 
+                    //update in comment table
+                    while ($updateLikes = mysqli_fetch_assoc($updateCommentLikesQuery)) {
+                     $LikeCommentQuery = mysqli_query($mysqli, "UPDATE commentblogpost SET LikesOnComment = '{$updateLikes['count']}' WHERE commentID = '$commentID'");
+                    }   
+ 
+ 
+ 
+                    //if admin or moderator, can delete comment
+                    if ($_SESSION['jobTitle'] == 'Admin' || $_SESSION['jobTitle'] == 'Moderator') {
+                     echo("<form class='deleteButton' method='POST' action='comment.php?post=$currentPost'>");
+                     echo("<button type = 'submit' name = 'delete$commentID'>delete</button>");
+                     echo("</form>");
+                    }
+ 
+                    if (isset($_POST["delete$commentID"])) {
+                     $deleteCommentQuery = mysqli_query($mysqli, "DELETE FROM commentblogpost WHERE commentID = '$commentID'");
+                     echo "<script> window.location.href='comment.php?post=$currentPost''</script>";
+                    }
+ 
+                    //create like button
+                     echo("<form class='likeButton' method='POST' action='comment.php?post=$currentPost'>");
+                     echo("<button name = '{$fetchComments['blogPostID']}'>like</button>");
+                     echo("</form>");
+                     
+                     //like/dislike post
+                     $CommentLikesQuery = mysqli_query($mysqli, "SELECT count(commentID) As count FROM userlikedcomments WHERE commentID = '$commentID'");
+                     while($ShowLikes = mysqli_fetch_assoc($CommentLikesQuery)) {
+                         echo($ShowLikes['count']);
+                        }
+ 
+                     if (isset($_POST["{$fetchComments['blogPostID']}"])) {
+                         if (isset($_POST["{$fetchComments['blogPostID']}"])) {
+                             $checkIfLikedQuery = mysqli_query($mysqli, "SELECT * FROM userlikedcomments WHERE userID = '$SessionUser' AND CommentID = '{$fetchComments['commentID']}'"); //check if user has liked post or not
+                             $CheckLikedNumRows = mysqli_num_rows($checkIfLikedQuery); //found a method of liking and unliking a post without inserting duplicate keys into the database here: https://stackoverflow.com/questions/2848904/check-if-record-exists By User Dominic Rodger
+     
+                             if ($CheckLikedNumRows > 0) {
+                                 $removeLike = $mysqli->prepare("DELETE FROM userlikedcomments WHERE userID = '$SessionUser' AND commentID = '{$fetchComments['commentID']}'");
+                                 $removeLike->execute();
+                                 
+                             }
+                             else {
+                                 $addLike = $mysqli->prepare("INSERT INTO userlikedcomments (userID, CommentID) VALUES($SessionUser, {$fetchComments['commentID']})");
+                                 $addLike->execute();
+     
+                             }
+                             echo "<script> window.location.href='comment.php?post=$currentPost''</script>";
+                         }
+                     }
                 }
-                include("Includes/footer.php");
+                }
+                else {
+                    echo("no comment");
+                }
+                
+                echo("</div>");
+                echo("</div>");
+                
     ?>
     </main>
+    <div class='container'>
+    <?php
+        include("Includes/footer.php");
+    ?>
+    </div>
 </body>
 </html>

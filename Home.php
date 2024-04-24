@@ -16,6 +16,10 @@
     <main class="container">
         <?php
         session_start();
+        if (empty($_SESSION['userID'])) {
+            $_SESSION['jobTitle'] = "";
+        }
+
         if (!empty($_SESSION['username'])) {
             require_once('includes/profileShortcut.php');
             $SessionUser = $_SESSION['userID'];
@@ -121,14 +125,15 @@
                     //if sessionUser made the post they get these permissions on it
                     if ($_SESSION['on'] == "yes") {
                         if ($post['userID'] == $SessionUser) {
-                    
+                            
+                            echo("<div style='display: flex; flex-direction: row;'>");
                             //edit button
-                            echo("<form class='editButton' method='POST' action='Home.php'>");
+                            echo("<form class='editButton' method='POST' action='Home.php' style='padding: 3px;'>");
                             echo("<button type = 'submit' name = 'edit$postID'>edit</button>");
                             echo("</form>");
 
                             //delete button
-                            echo("<form class='deleteButton' method='POST' action='Home.php'>");
+                            echo("<form class='deleteButton' method='POST' action='Home.php' style='padding: 3px;'>");
                             echo("<button type = 'submit' name = 'delete$postID'>delete</button>");
                             echo("</form>");
 
@@ -145,7 +150,7 @@
                                 echo("<button type='submit' name='SubmitEdit$postID'>Submit Changes</button>");
                                 echo("</form>");
                             }
-
+                            echo("</div>");
                             if (isset($_POST["SubmitEdit$postID"])) {
                                 if($_POST['newText'] != "") { //improve upon this as you can just put in blank spaces
                                     $updateBlogPostQuery = mysqli_query($mysqli, "UPDATE blogpost SET blogPostText = '{$_POST['newText']}' WHERE blogPostID = '$postID'");
@@ -190,7 +195,7 @@
 
 
                                 //create like button
-                                echo("<form class='likeButton' method='POST' action='Home.php'>");
+                                echo("<form class='likeButton' method='POST' action='Home.php' style='display: flex; flex-direction: row;'>");
                                 echo("<button name = 'Like$postID'>like</button>");
                                     echo("<label>{$LikeNum['count']}</label>");
                                 echo("</form>");
@@ -215,8 +220,7 @@
                                             $addLike->execute();
         
                                         }
-                                     //   echo "<script> window.location.href='Home.php''</script>";
-                                        header("refresh: 0;");
+                                       echo "<script> window.location.href='Home.php''</script>";
                                     }
                                 }
                         }
@@ -254,11 +258,32 @@
                 }
                 echo("</div>");
                 
-                echo("<div style='background: green; padding: 10px; border-radius: 8px;'>");
+                echo("<div class = 'postContent' style='background: green; padding: 10px; border-radius: 8px;'>");
                 echo("<textarea readonly style = 'background: green; border: none;'>{$post['blogPostText']}</textarea>");
-                echo("<img class='tempPostImage' src= '{$post['blogPostImage']}'>");
-                echo($post['blogPostLink']);
-                echo($post['blogPostVideo']);            
+                if ($_SESSION['jobTitle'] != "signedOut") {
+                    echo("<img class='tempPostImage' src= '{$post['blogPostImage']}'>");
+                }
+                else if(!empty($post['blogPostImage'])){
+                    echo("<span style='background: #adb013; border: 3px solid black;'>Create Account Or Sign In to View Photos</span>");
+                }
+                
+                if ($_SESSION['jobTitle'] != "signedOut") {
+                    echo("<a href='{$post['blogPostLink']}'>{$post['blogPostLink']}</a>");
+                }
+                else if(!empty($post['blogPostLink'])){
+                    echo("<span style='background: #adb013; border: 3px solid black;'>Create Account Or Sign In to View Links</span>");
+                }
+
+                //video
+                if (!empty($post['blogPostVideo']) && $_SESSION['jobTitle'] != "signedOut") {
+                $parse = parse_url($post['blogPostVideo']); 
+                $query = $parse['query'];
+                $final=substr($query,2);
+                echo("<iframe width='420' height='315' src='https://www.youtube.com/embed/{$final}'></iframe>");
+                }
+                else if(!empty($post['blogPostVideo'])){
+                    echo("<span style='background: #adb013; border: 3px solid black;'>Create Account Or Sign In to View Videos</span>");
+                }            
                 echo("</div>");
 
     

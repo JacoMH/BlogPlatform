@@ -36,7 +36,6 @@ function on() {
     document.getElementById("overlay").style.display = "none";
   }
 
- window.history.scrollRestoration = manual;
  
 function refresh() {
     alert("hello");
