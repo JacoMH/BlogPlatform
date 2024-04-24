@@ -59,14 +59,11 @@
                     echo("</div>");
                     echo("<span class='username' style='font-size: large; display: flex; justify-content: center;'> {$_SESSION['username']}</span>");
                     echo("</div>");
-                    if ($post < 1) {
-                        echo("No posts");
-                    }
                     if($post['blogPostText'] != "") {
                         echo("<div class = 'postContent'>");
                         $textContent = $post['blogPostText'];
                         echo("<textarea readonly style='background: green; border: none;'>{$textContent}</textarea>");
-                        echo("<img class='tempPostImage' src='{$post['blogPostImage']}'>");
+                        echo("<img class='tempPostImage' src='{$post['blogPostImage']}'></img>");
                         echo("<a href={$post['blogPostLink']}>{$post['blogPostLink']}</a>");
                         //video
                         if (!empty($post['blogPostVideo'])) {
@@ -74,6 +71,13 @@
                             $query = $parse['query'];
                             $final=substr($query,2);
                             echo("<iframe width='420' height='315' src='https://www.youtube.com/embed/{$final}'></iframe>"); 
+                        }
+                        //context
+                        if (!empty($post['BlogPostContext'])) {
+                            echo("<div style = 'display: flex; flex-direction: column; background: grey; border: 1px solid black; margin-top: 3px;'>");
+                            echo("<label>Admin/Moderator gave context for this post:</label>");
+                            echo("<textarea style='background: grey; border: none;'>{$post['BlogPostContext']}</textarea>");
+                            echo("</div>");
                         }
                         echo("</div>");
                         $postID = $post['blogPostID'];
@@ -100,7 +104,7 @@
                          $_SESSION['profileLikes'] = $displayLikes['profileLikes']; 
                          }
 
-                
+                         
                         //create like/dislike post
                         $PostLikes = $post['likesOnPost'];
                         echo("<form class='likeButton' style='padding: 3px;' method='POST' action='Profile.php'>");
@@ -127,7 +131,6 @@
         
                         //edit post
                         if (isset($_POST["edit$postID"])) {
-                            echo("Hllo");
                             echo("<form method='POST'>");
                             echo("<textarea name='newText'>{$post['blogPostText']}</textarea>");
                             echo("<button type='submit' name='SubmitEdit$postID'>Submit Changes</button>");
@@ -195,6 +198,9 @@
         else{
             echo("<span class='username'>no posts</span>");
         }
+    ?>
+    <?php
+    include("Includes/footer.php");
     ?>
     </div>
 </body>

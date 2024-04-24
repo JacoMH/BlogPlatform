@@ -13,7 +13,6 @@
 
 
 
-
     //fetch total profile likes
     $fetchUserInfo = mysqli_query($mysqli, "SELECT * FROM user WHERE userID = '$SessionUser'");
 ?>

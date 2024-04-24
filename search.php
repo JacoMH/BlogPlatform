@@ -53,6 +53,9 @@
                 }
             ?>
     </div>
+    <?php
+        include("Includes/footer.php");
+        ?>
     </main>
 
 </body>

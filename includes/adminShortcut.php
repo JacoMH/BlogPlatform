@@ -1,6 +1,13 @@
 <header style= "display: flex; flex-direction: row; justify-content: space-between;">
     <div id="logo"><a href="../Home.php"><h2>Blog Platform</h2></a></div> 
     <div class="profileShortcut">
+    <nav>
+            <ul>
+                <li><a href="Home.php">Home</a></li>
+                <li><a href="latest.php">Lastest Posts</a></li>
+                <li><a href="Flagged.php">Flagged</a></li>
+            </ul>
+        </nav>
     <div style="align-content: center; padding-right: 20px; height: 20px; border-radius: 8px; padding: 10px; margin: 5px; background: green;"><a class = "profileShortcut" href="logout.php">Log Out</a></div>
         <div style="">
         <div ><a href="admin/Home.php"><img class= 'profilePhoto' src=<?php echo("../{$_SESSION['profilePicture']}"); ?> alt = "Profile Picture"></a></div>

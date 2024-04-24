@@ -46,6 +46,11 @@
     echo("Welcome back, "); echo($_SESSION["firstName"]);
     echo("</div>");
 
+    echo("<form method='POST'>");
+    echo("");
+
+    echo("<a href='information.php'>Update Password</a>");
+
     While($profileInfo = mysqli_fetch_assoc($TopOfProfileQuery)) {
 
     echo("</div>");

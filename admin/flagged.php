@@ -20,10 +20,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" type="text/css" href="..\css\mobile.css">
     <link rel="stylesheet" type="text/css" href="..\css\desktop.css" media="only screen and (min-width: 800px)">
-    <title>Admin | Home</title>
+    <title>Admin | Flagged</title>
 </head>
-<body>
-    <main class='container'>
+<main class='container'>
         <!-- header -->
         <header style= "display: flex; flex-direction: row; justify-content: space-between;">
     <div id="logo"><a href="../Home.php"><h2>Blog Platform</h2></a></div> 
@@ -42,10 +41,10 @@
         </div>
     </div>
 </header>
-
-        <h2>Users</h2>
+<body>
+<h2>Flagged By Moderators</h2>
         <?php
-            $SelectUsersQuery = mysqli_query($mysqli, "SELECT * FROM user WHERE jobTitle = 'user'");
+            $SelectUsersQuery = mysqli_query($mysqli, "SELECT * FROM user WHERE Flagged = 'yes'");
         ?>
             <div class='profilesContainer'>
                 <?php
@@ -58,21 +57,34 @@
                             echo("<span class='username' style='display: flex; justify-content: center; font-size: large;'>{$Users['username']}</span>");
                              
                             //delete button
-                            echo("<form class='deleteButton'  style='padding: 3px; align-self: center;' method='POST' action='Profile.php'>");
+                            echo("<form class='deleteButton'  style='padding: 3px; align-self: center;' method='POST' action='flagged.php'>");
                             echo("<button type = 'submit' name = 'delete$userID'>delete</button>");
                             echo("</form>");
-                            echo("</div>");
 
                                 //delete user
                             if (isset($_POST["delete$userID"])) {
                                 $deleteUser = mysqli_query($mysqli, "DELETE * FROM user WHERE userID = $userID");
                             }
+
+                            //remove flag button
+                            echo("<form class='deleteButton'  style='padding: 3px; align-self: center;' method='POST' action='flagged.php'>");
+                            echo("<button type = 'submit' name = 'flag$userID'>Remove Flag</button>");
+                            echo("</form>");
+                            echo("</div>");
+
+                            //remove flag
+                            if (isset($_POST["flag$userID"])) {
+                                $removeFlag = mysqli_query($mysqli, "UPDATE user SET Flagged = 'no' WHERE userID = '$userID'");
+                                echo "<script> location.reload();</script>";
+                            }
+                            echo("</div>");
                         }
                 ?>
             </div>
+            <div class='container'>
             <?php
         include("Includes/footer.php");
         ?>
-    </main>
+        </div>
 </body>
 </html>

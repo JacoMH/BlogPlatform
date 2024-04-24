@@ -1,5 +1,6 @@
 <?php
     require_once('includes/config.php');
+
 ?>
 
 <!DOCTYPE html>
@@ -104,8 +105,6 @@
             <button type="submit" name="filterConfirm">Go</button>
             </form>
         <?php
-
-
         While ($post = mysqli_fetch_assoc($mostLikedPostsQuery)) {
             echo("<div class = 'post'>");
             echo("<div class='BloggerProfile' style='padding-right: 10px;'>");
@@ -156,8 +155,9 @@
                                     $updateBlogPostQuery = mysqli_query($mysqli, "UPDATE blogpost SET blogPostText = '{$_POST['newText']}' WHERE blogPostID = '$postID'");
                                     echo "<script> window.location.href='Home.php'</script>";
                                 }
-                }
 
+                    echo("</form>");
+                }   
                 }
                     }
 
@@ -191,7 +191,26 @@
                                 //update likes in post table
                                 $LikeBlogPostQuery = mysqli_query($mysqli, "UPDATE blogpost SET LikesOnPost = '{$LikeNum['count']}' WHERE blogPostID = '$postID'");
                            
-
+                                   if (!($post['userID'] == $_SESSION['userID'])) {
+                                     //add context button
+                                     echo("<form class='contextButton' method='POST' action='Home.php' style='padding: 3px;'>");
+                                     echo("<button type = 'submit' name = 'context$postID'> Add Context</button>");
+                                     echo("</form>");
+                 
+                                     //add context menu
+                                     if (isset($_POST["context$postID"])) {
+                                         echo("<form method='POST' action='Home.php'>");
+                                         echo("<textarea name='newContext'>{$post['BlogPostContext']}</textarea>");
+                                         echo("<button type='submit' name='contextSubmit$postID'>Submit Changes</button>");
+                                         echo("</form>");
+                                     }
+                 
+                                     //submit context
+                                     if (isset($_POST["contextSubmit$postID"]) && $_POST['newContext'] != "") {
+                                         $updateContext = mysqli_query($mysqli, "UPDATE blogpost SET BlogPostContext = '{$_POST['newContext']}' WHERE blogPostID = '$postID'");
+                                         echo "<script> window.location.href='Home.php''</script>";
+                                     }
+                                   }
 
 
                                 //create like button
@@ -209,19 +228,19 @@
                                     if (isset($_POST["Like$postID"]) && $SessionUser != "signedOut") {
                                         $checkIfLikedQuery = mysqli_query($mysqli, "SELECT * FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '$postID'"); //check if user has liked post or not
                                         $CheckLikedNumRows = mysqli_num_rows($checkIfLikedQuery); //found a method of liking and unliking a post without inserting duplicate keys into the database here: https://stackoverflow.com/questions/2848904/check-if-record-exists By User Dominic Rodger
-        
+                                        $truefalsebool = 'false';
                                         if ($CheckLikedNumRows > 0) {
                                             $removeLike = $mysqli->prepare("DELETE FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '$postID'");
                                             $removeLike->execute();
-                                            
                                         }
                                         else {
                                             $addLike = $mysqli->prepare("INSERT INTO userlikedposts (userID, blogPostID) VALUES($SessionUser, $postID)");
                                             $addLike->execute();
+
         
                                         }
-                                       echo "<script> window.location.href='Home.php''</script>";
                                     }
+                                    echo "<script> window.location.href=Home.php;</script>";
                                 }
                         }
                         
@@ -260,6 +279,7 @@
                 
                 echo("<div class = 'postContent' style='background: green; padding: 10px; border-radius: 8px;'>");
                 echo("<textarea readonly style = 'background: green; border: none;'>{$post['blogPostText']}</textarea>");
+              
                 if ($_SESSION['jobTitle'] != "signedOut") {
                     echo("<img class='tempPostImage' src= '{$post['blogPostImage']}'>");
                 }
@@ -273,7 +293,7 @@
                 else if(!empty($post['blogPostLink'])){
                     echo("<span style='background: #adb013; border: 3px solid black;'>Create Account Or Sign In to View Links</span>");
                 }
-
+                
                 //video
                 if (!empty($post['blogPostVideo']) && $_SESSION['jobTitle'] != "signedOut") {
                 $parse = parse_url($post['blogPostVideo']); 
@@ -283,7 +303,14 @@
                 }
                 else if(!empty($post['blogPostVideo'])){
                     echo("<span style='background: #adb013; border: 3px solid black;'>Create Account Or Sign In to View Videos</span>");
-                }            
+                }
+
+                if (!empty($post['BlogPostContext'])) {
+                    echo("<div style = 'display: flex; flex-direction: column; background: grey; border: 1px solid black; margin-top: 3px;'>");
+                    echo("<label>Admin/Moderator gave context for this post:</label>");
+                    echo("<textarea style='background: grey; border: none;'>{$post['BlogPostContext']}</textarea>");
+                    echo("</div>");
+                }
                 echo("</div>");
 
     
