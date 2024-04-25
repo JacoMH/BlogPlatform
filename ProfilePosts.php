@@ -86,33 +86,25 @@
                         //
                 echo("<span style='display: flex; flex-direction: row; padding: 3px; justify-content: center;'>");
                         
-                         //gather total likes and adds it to post to display and store in the database
-                         $likesQuery = mysqli_query($mysqli, "SELECT count(blogpostID) As 'likeCount' FROM userlikedposts WHERE blogpostID = '$postID'");
-                         $LikeNum = mysqli_fetch_assoc($likesQuery);
-                         
-                         //updates likes in post table
-                         $storeLikesQuery = $mysqli->prepare("UPDATE blogpost SET likesOnPost = '{$LikeNum['likeCount']}' WHERE blogpostID = '$postID'");
-                         $storeLikesQuery->execute();
-         
-                         //updates total likes in user table
-                      //   $totalLikesQuery = $mysqli->prepare("UPDATE user SET profileLikes = (SELECT SUM(likesOnPost) As 'totalLikes' FROM blogpost WHERE userID = '$SessionUser') WHERE userID = '$SessionUser'");
-                       //  $totalLikesQuery->execute();
-                         
-                         //update display
-                         $displayTotalLikes = mysqli_query($mysqli, "SELECT profileLikes FROM user WHERE userID = '$SessionUser'");
-                         While ($displayLikes = mysqli_fetch_assoc($displayTotalLikes)) {
-                         $_SESSION['profileLikes'] = $displayLikes['profileLikes']; 
-                         }
-
-                         
+                        
+                                        //all stuff likes below
+                    
+                        //gather total likes and adds it to post to display and store in the database
+                        $likesQuery = mysqli_query($mysqli, "SELECT count(blogpostID) As 'likeCount' FROM userlikedposts WHERE blogpostID = '{$post['blogPostID']}'");
+                        $LikeNum = mysqli_fetch_assoc($likesQuery);
+                
+                        //updates likes in post table
+                        $storeLikesQuery = $mysqli->prepare("UPDATE blogpost SET likesOnPost = '{$LikeNum['likeCount']}' WHERE blogpostID = '{$post['blogPostID']}'");
+                        $storeLikesQuery->execute();
+                
                         //create like/dislike post
                         $PostLikes = $post['likesOnPost'];
-                        echo("<form class='likeButton' style='padding: 3px;' method='POST' action='Profile.php'>");
-                        echo("<button type = 'submit' name = '$postID'>like</button>");
-                        echo("<label>{$LikeNum['likeCount']}</label>");
+                        echo("<form class='likeButton' method='POST'>");
+                        echo("<button name = '{$post['blogPostID']}'>like</button>");
+                        echo("<label for='{$post['blogPostID']}'>{$LikeNum['likeCount']}</label>");
                         echo("</form>");
-                        
-        
+
+
                         //edit button
                         echo("<form class='editButton' style='padding: 3px;' method='POST' action='Profile.php'>");
                         echo("<button type = 'submit' name = 'edit$postID'>edit</button>");
@@ -154,7 +146,6 @@
         
                         While ($numOfComments = mysqli_fetch_assoc($numOfCommentsQuery)) {
                             
-                            
                             $commentNum = $numOfComments['NumOfComments'];
                             
                             
@@ -174,34 +165,37 @@
                         echo("<div class='smallCommentText'>");
                         echo($post['DateAndTime']);
                         echo("</div>");
-        
+
                         //like/dislike post
-                        if (isset($_POST[$postID])) {
-                            $checkIfLikedQuery = mysqli_query($mysqli, "SELECT * FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '$postID'");
+                        if (isset($_POST[$post['blogPostID']]) && $SessionUser != "signedOut") {
+                            $checkIfLikedQuery = mysqli_query($mysqli, "SELECT * FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '{$post['blogPostID']}'");
                             $CheckLikedNumRows = mysqli_num_rows($checkIfLikedQuery); //found a method of liking and unliking a post without inserting duplicate keys into the database here: https://stackoverflow.com/questions/2848904/check-if-record-exists By User Dominic Rodger
-        
+                
                             if ($CheckLikedNumRows > 0) {
-                                $removeLike = $mysqli->prepare("DELETE FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '$postID'");
+                                if (!(empty($_SESSION['userID']))) {
+                                $removeLike = $mysqli->prepare("DELETE FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '{$post['blogPostID']}'");
                                 $removeLike->execute();
-                                
+                                }
                             }
                             else {
-                                $addLike = $mysqli->prepare("INSERT INTO userlikedposts (userID, blogPostID) VALUES($SessionUser, $postID)");
-                                $addLike->execute();
-        
+                                if (!(empty($_SESSION['userID']))) {
+                                    $addLike = $mysqli->prepare("INSERT INTO userlikedposts (userID, blogPostID) VALUES($SessionUser, '{$post['blogPostID']}')");
+                                    $addLike->execute();
+                                }
+                
                             }
                             echo "<script> window.location.href='Profile.php'</script>";
                         }
+                                }
+                            }
+                        }
+                    else{
+                        echo("<span class='username'>no posts</span>");
                     }
-                }
-            }
-        else{
-            echo("<span class='username'>no posts</span>");
-        }
     ?>
+    </div>
     <?php
     include("Includes/footer.php");
     ?>
-    </div>
 </body>
 </html>

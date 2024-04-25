@@ -35,7 +35,7 @@
             Enter New Password:
             <input name = 'passwordChanger1' type='password'></input>
             Confirm New Password:
-            <input name = 'passwordChanger2' type='password'></input>
+            <input name = 'passwordChanger2' type='password'></input> 
             <button type='submit' name='changePassConfirm' >Change Password</button>
         </form>
         

@@ -83,7 +83,7 @@
             </div>
             <div class='container'>
             <?php
-        include("Includes/footer.php");
+        include("../Includes/footer.php");
         ?>
         </div>
 </body>

@@ -34,7 +34,7 @@
                 $username = $_POST["username"] ?? null; $username = preg_replace('/\s+/', '', $username);
                 $password = $_POST["password"] ?? null; $password = preg_replace('/\s+/', '', $password);
                 $securityAnswer = $_POST["securityAns"] ?? null; $securityAnswer = preg_replace('/\s+/', '', $securityAnswer);
-                mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+                
                 $checkLoginQuery = "SELECT * FROM user WHERE username = '$username' AND securityQuestionAns = '$securityAnswer'";
                 $result = mysqli_query($mysqli, $checkLoginQuery);
                 while($row = mysqli_fetch_assoc($result)) {

@@ -33,7 +33,7 @@
 
                 //search
                 if ($_GET['s'] && $_GET['s'] != "") {
-                    $findUsersQuery = "SELECT * FROM user WHERE username LIKE '%$Query%' OR userID LIKE '%$Query%'";
+                    $findUsersQuery = "SELECT * FROM user WHERE username LIKE '%$Query%' OR username = '$Query'";
                     $findUsersLink = mysqli_query($mysqli, $findUsersQuery);           
                     $findUsersResult = mysqli_fetch_assoc($findUsersLink);
                     echo("<div class='profilesContainer'>");

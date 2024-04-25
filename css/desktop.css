@@ -261,7 +261,6 @@ textarea {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin: 50px;
     border: 1px solid grey;
     border-radius: 8px;
     padding: 10px;

@@ -191,7 +191,7 @@
     ?>
     </div>
     <?php
-        include("Includes/footer.php");
+        include("../Includes/footer.php");
         ?>
     </main>
 </body>

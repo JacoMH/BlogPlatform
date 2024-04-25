@@ -104,6 +104,7 @@
                 
                 if ($checkIfComments > 0) {
                         //show comments
+                        echo("<div style='display: flex; flex-direction: column;'");
                 while ($fetchComments = mysqli_fetch_assoc($fetchCommentsQuery)) {
                     echo("<div class='post' style='display: flex; flex-direction: row; align-items: center;'>");
                  
@@ -177,6 +178,7 @@
                 else {
                     echo("no comment");
                 }
+                echo("</div>");
                 
                 echo("</div>");
                 echo("</div>");

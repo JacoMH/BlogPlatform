@@ -101,7 +101,7 @@ li {
     background:green;
     border-radius: 4px;
     display: flex;
-    flex-direction:row;
+    flex-direction:column;
     align-content: center;
     padding:10px;
 }
@@ -127,6 +127,9 @@ li {
     padding: 10px;
     border: 1px solid grey;
     border-radius: 8px;
+    min-width: 200px;
+    max-width: 1000px;
+    align-items: center;
 }
 
 .topbanner{
@@ -225,7 +228,6 @@ textarea {
 
 .bannerPhoto{
     display: flex;
-    width: 2048px;
     height: 300px; /* found how to crop the images in a circular way here by User Johnny Kutnowski On Oct 17th 2014: https://stackoverflow.com/questions/26421274/css-circular-cropping-of-rectangle-image */
     max-height: 1152px;
     max-width: 1024px;
@@ -258,7 +260,6 @@ textarea {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
-    margin: 50px;
     border: 1px solid grey;
     border-radius: 8px;
     padding: 10px;
@@ -297,3 +298,37 @@ textarea {
     background: #FFF;
     z-index: -1;
   }
+
+.tempPostImage{
+    max-width: 200px;
+}
+
+.profile{
+    margin: 50px;
+    background: lightgrey;
+    border-radius: 8px;
+    border: 1px solid black;
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    max-width: 200px;
+    min-width: 100px;
+    padding: 20px;
+}
+
+.profilesContainer {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.BloggerProfile{
+    margin-right: 10px;
+}
+
+label {
+    padding: 3px;
+}
+
+.tempPostImage{
+    width: 100px;
+}

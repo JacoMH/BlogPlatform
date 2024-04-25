@@ -84,7 +84,7 @@
             </form>
                     <?php
                     //image
-                        if (isset($_POST['imageContent']) && $_SESSION['TempStoreImage'] != "") {
+                        if (isset($_POST['imageContent']) && !empty($_SESSION['TempStoreImage'])) {
                             echo("<form method='POST' action='Profile.php'>");
                             echo("<input type='text' name='postImageLink' value = '{$_SESSION['TempStoreImage']}' placeholder = 'image address here...'>");
                             echo("<button type='submit' name='confirmImagePicture'>add</button>");
@@ -106,7 +106,7 @@
 
 
                     //link
-                        if (isset($_POST['linkContent']) && $_SESSION['TempStoreLink'] != "") {
+                        if (isset($_POST['linkContent']) && !empty($_SESSION['TempStoreLink'])) {
                     
                             echo("<form method='POST' action='Profile.php'>");
                             echo("<input type='text' name='postLink' value = '{$_SESSION['TempStoreLink']}' placeholder = 'link address here...'>");
@@ -127,7 +127,7 @@
 
                     
                         //video
-                         if (isset($_POST['videoContent']) && $_SESSION['TempStoreVideo'] != "") {
+                         if (isset($_POST['videoContent']) && !empty($_SESSION['TempStoreVideo'])) {
                             echo("<form method='POST' action='Profile.php'>");
                             echo("<input type='text' name='postImageLink' value = '{$_SESSION['TempStoreVideo']}' placeholder = 'YouTube address here...'>");
                             echo("<button type='submit' name='confirmVideo'>add</button>");

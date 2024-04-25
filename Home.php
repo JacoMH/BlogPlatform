@@ -34,6 +34,7 @@
             $_SESSION['on'] = "no";
             $_SESSION['jobTitle'] = "signedOut";  //tells different parts of the site to disable/enable features based on if we are logged in or not
             $SessionUser = "signedOut";
+            $_SESSION['userID'] = "";
         }
         ?>
         </div>
@@ -167,19 +168,18 @@
                     
 
 
-
                     
                         if ($_SESSION['on'] = "yes") {
                             if ($_SESSION['jobTitle'] == 'Admin' || $_SESSION['jobTitle'] == 'Moderator') {
-                                //if admin or moderator, can delete comment
+                                //if admin or moderator, can delete post
                                 echo("<form class='deleteButton' method='POST' action='Home.php'>");
                                 echo("<button type = 'submit' name = 'deleted$postID'>delete</button>");
                                 echo("</form>");
                                 }
         
                                 if (isset($_POST["deleted$postID"])) {
-                                $deleteCommentQuery = mysqli_query($mysqli, "DELETE FROM commentblogpost WHERE commentID = '$commentID'");
-                                echo "<script> window.location.href='comment.php?post=$currentPost''</script>";
+                                $deleteCommentQuery = mysqli_query($mysqli, "DELETE FROM blogpost WHERE blogPostID = '$postID'");
+                                echo "<script> window.location.href='Home.php''</script>";
                                 }
                                 
                                         
@@ -191,7 +191,6 @@
                                 //update likes in post table
                                 $LikeBlogPostQuery = mysqli_query($mysqli, "UPDATE blogpost SET LikesOnPost = '{$LikeNum['count']}' WHERE blogPostID = '$postID'");
                            
-                                   if (!($post['userID'] == $_SESSION['userID'])) {
                                      //add context button
                                      echo("<form class='contextButton' method='POST' action='Home.php' style='padding: 3px;'>");
                                      echo("<button type = 'submit' name = 'context$postID'> Add Context</button>");
@@ -209,7 +208,6 @@
                                      if (isset($_POST["contextSubmit$postID"]) && $_POST['newContext'] != "") {
                                          $updateContext = mysqli_query($mysqli, "UPDATE blogpost SET BlogPostContext = '{$_POST['newContext']}' WHERE blogPostID = '$postID'");
                                          echo "<script> window.location.href='Home.php''</script>";
-                                     }
                                    }
 
 

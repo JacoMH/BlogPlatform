@@ -79,7 +79,7 @@
 <body>
     <main class="container">
     <?php
-    if (isset($_SESSION['userID'])) {
+    if (!empty($_SESSION['userID'])) {
         include("includes/profileShortcut.php");
     }
     else{
@@ -183,15 +183,36 @@
             //postContent
             echo("<div class='postContent'>");
             echo("<textarea readonly style='background: green; padding: 10px; border-radius: 8px; border: none;'>{$row['blogPostText']}</textarea>");
-            echo("<img class='tempPostImage' src='{$row['blogPostImage']}'>");
-            echo("<a href='{$row['blogPostLink']}'>{$row['blogPostLink']}</a>");
+            if ($_SESSION['jobTitle'] != "signedOut") {
+                echo("<img class='tempPostImage' src= '{$row['blogPostImage']}'>");
+            }
+            else if(!empty($row['blogPostImage'])){
+                echo("<span style='background: #adb013; border: 3px solid black;'>Create Account Or Sign In to View Photos</span>");
+            }
+            
+            if ($_SESSION['jobTitle'] != "signedOut") {
+                echo("<a href='{$row['blogPostLink']}'>{$row['blogPostLink']}</a>");
+            }
+            else if(!empty($row['blogPostLink'])){
+                echo("<span style='background: #adb013; border: 3px solid black;'>Create Account Or Sign In to View Links</span>");
+            }
             //video
-            if (!empty($row['blogPostVideo'])) {
+            if (!empty($row['blogPostVideo']) && $_SESSION['jobTitle'] != "signedOut") {
                 $parse = parse_url($row['blogPostVideo']); 
                 $query = $parse['query'];
                 $final=substr($query,2);
-                echo("<iframe width='420' height='315' src='https://www.youtube.com/embed/{$final}'></iframe>"); 
-            }
+                echo("<iframe width='420' height='315' src='https://www.youtube.com/embed/{$final}'></iframe>");
+                }
+                else if(!empty($row['blogPostVideo'])){
+                    echo("<span style='background: #adb013; border: 3px solid black;'>Create Account Or Sign In to View Videos</span>");
+                }
+
+                if (!empty($row['BlogPostContext'])) {
+                    echo("<div style = 'display: flex; flex-direction: column; background: grey; border: 1px solid black; margin-top: 3px;'>");
+                    echo("<label>Admin/Moderator gave context for this post:</label>");
+                    echo("<textarea style='background: grey; border: none;'>{$row['BlogPostContext']}</textarea>");
+                    echo("</div>");
+                }
             echo("</div>");
     
             if ($_SESSION['on'] = "yes") {
@@ -229,16 +250,9 @@
                             echo "<script> window.location.href='user.php?user=$userProfile'</script>";
                         }
                     }
-    
+                    
 
-            }
-    
-    
-    
-    
-    
-    
-        //all stuff likes below
+                            //all stuff likes below
     
             //gather total likes and adds it to post to display and store in the database
             $likesQuery = mysqli_query($mysqli, "SELECT count(blogpostID) As 'likeCount' FROM userlikedposts WHERE blogpostID = '{$row['blogPostID']}'");
@@ -262,17 +276,37 @@
                 $CheckLikedNumRows = mysqli_num_rows($checkIfLikedQuery); //found a method of liking and unliking a post without inserting duplicate keys into the database here: https://stackoverflow.com/questions/2848904/check-if-record-exists By User Dominic Rodger
     
                 if ($CheckLikedNumRows > 0) {
+                    if (!(empty($_SESSION['userID']))) {
                     $removeLike = $mysqli->prepare("DELETE FROM userlikedposts WHERE userID = '$SessionUser' AND blogPostID = '{$row['blogPostID']}'");
                     $removeLike->execute();
-                    
+                    }
                 }
                 else {
-                    $addLike = $mysqli->prepare("INSERT INTO userlikedposts (userID, blogPostID) VALUES($SessionUser, '{$row['blogPostID']}')");
-                    $addLike->execute();
+                    if (!(empty($_SESSION['userID']))) {
+                        $addLike = $mysqli->prepare("INSERT INTO userlikedposts (userID, blogPostID) VALUES($SessionUser, '{$row['blogPostID']}')");
+                        $addLike->execute();
+                    }
     
                 }
                 echo "<script> window.location.href='user.php?user=$userProfile'</script>";
             }
+
+
+
+
+
+
+
+
+
+            }
+    
+    
+    
+    
+    
+    
+
         }
         else {
             echo("<div class='username'>no posts</div>");
