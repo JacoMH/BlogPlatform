@@ -54,7 +54,12 @@
         While ($getUser = mysqli_fetch_assoc($getUserQuery)) {
             echo("<div class='BloggerProfile' style='padding-right: 10px;'>");
                     echo("<div class='userPhoto'>");
-                    echo("<img class='userPhoto' src= '../{$getUser['profilePicture']}'>");
+                    if ($getUser['profilePicture'] == "images/defaultProfilePicture.png") {
+                        echo("<a href='../user.php?user={$getUser['userID']}'><img class='userPhoto' src='../{$getUser['profilePicture']}'></a>");
+                    }
+                    else {
+                        echo("<a href='../user.php?user={$getUser['userID']}'><img class='userPhoto' src='{$getUser['profilePicture']}'></a>");
+                    }
                     echo("</div>");
 
                     echo("<div class='username' style='font-size: large; display: flex; justify-content: center;'>");

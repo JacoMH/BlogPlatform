@@ -53,7 +53,12 @@
                             $userID = $Users['userID'];
 
                             echo("<div class='profile'>");
-                            echo("<a href='../user.php?user={$Users['userID']}'><img class='userPhoto' src='../{$Users['profilePicture']}'></a>");
+                            if ($Users['profilePicture'] == "images/defaultProfilePicture.png") {
+                                echo("<a href='../user.php?user={$Users['userID']}'><img class='userPhoto' src='../{$Users['profilePicture']}'></a>");
+                            }
+                            else {
+                                echo("<a href='../user.php?user={$Users['userID']}'><img class='userPhoto' src='{$Users['profilePicture']}'></a>");
+                            }
                             echo("<span class='username' style='display: flex; justify-content: center; font-size: large;'>{$Users['username']}</span>");
                              
                             //delete button
